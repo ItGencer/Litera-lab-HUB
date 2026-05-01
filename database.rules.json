@@ -1,0 +1,28 @@
+{
+  "rules": {
+    ".read": false,
+    ".write": false,
+
+    "users": {
+      "$uid": {
+        ".read": "$uid === auth.uid || root.child('users').child(auth.uid).child('role').val() === 'admin'",
+        ".write": "$uid === auth.uid || root.child('users').child(auth.uid).child('role').val() === 'admin'"
+      }
+    },
+
+    "public_data": {
+      ".read": true,
+      ".write": false
+    },
+
+    "admin_data": {
+      ".read": "root.child('users').child(auth.uid).child('role').val() === 'admin'",
+      ".write": "root.child('users').child(auth.uid).child('role').val() === 'admin'"
+    },
+
+    "restricted_data": {
+      ".read": "auth !== null && root.child('users').child(auth.uid).child('banned').val() !== true",
+      ".write": false
+    }
+  }
+}

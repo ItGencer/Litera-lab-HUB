@@ -3,32 +3,20 @@ import { provideRouter } from '@angular/router';
 import { routes } from './app.routes';
 import { provideClientHydration, withEventReplay } from '@angular/platform-browser';
 
-// Firebase імпорти
 import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
-import { getFirestore, provideFirestore } from '@angular/fire/firestore';
-import { getAnalytics, provideAnalytics, ScreenTrackingService, UserTrackingService } from '@angular/fire/analytics';
+import { getDatabase, provideDatabase } from '@angular/fire/database';
+import { getAuth, provideAuth } from '@angular/fire/auth';
 
-// Імпорт твого конфігу (переконайся, що шлях правильний)
 import { environment } from '../environments/environment';
 
 export const appConfig: ApplicationConfig = {
   providers: [
-    // Твої існуючі налаштування
     provideBrowserGlobalErrorListeners(),
     provideRouter(routes),
-    provideClientHydration(withEventReplay()), // Твоя фіча реплею подій
+    provideClientHydration(withEventReplay()),
 
-    // --- Firebase блоки ---
-    
-    // 1. Головна ініціалізація
     provideFirebaseApp(() => initializeApp(environment.firebase)),
-
-    // 2. База даних (Firestore)
-    provideFirestore(() => getFirestore()),
-
-    // 3. Аналітика (безпечно для SSR)
-    provideAnalytics(() => getAnalytics()),
-    ScreenTrackingService,
-    UserTrackingService
+    provideDatabase(() => getDatabase()),
+    provideAuth(() => getAuth()),
   ]
 };
