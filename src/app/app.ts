@@ -1,9 +1,10 @@
 import { Component, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
+import { Test } from "./test/test";
 
 @Component({
   selector: 'llh-root',
-  imports: [RouterOutlet],
+  imports: [RouterOutlet, Test],
   templateUrl: './app.html',
   styleUrl: './app.scss'
 })

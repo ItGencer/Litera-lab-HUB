@@ -3,6 +3,7 @@ export const environment = {
   firebase: {
     apiKey: "AIzaSyChz62xfIH4-r7j6jTkZQ0ngBSXTR8MGo8",
     authDomain: "litera-lab-hub.firebaseapp.com",
+    databaseURL: "https://litera-lab-hub-default-rtdb.europe-west1.firebasedatabase.app",
     projectId: "litera-lab-hub",
     storageBucket: "litera-lab-hub.firebasestorage.app",
     messagingSenderId: "680830613418",

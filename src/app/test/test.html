@@ -1,0 +1,38 @@
+<!-- src/app/test/test.html -->
+
+<div>
+  <h2>Твори з Firebase</h2>
+
+  @if (error()) {
+    <p style="color:red">Помилка: {{ error() }}</p>
+  }
+
+  @if (works()) {
+    @for (work of works()!; track work.Title) {
+      <div style="border:1px solid #ccc; padding:1rem; margin:0.5rem 0; border-radius:8px">
+        <h3>{{ work.Title }}</h3>
+        <p>{{ work.Description }}</p>
+      </div>
+    }
+  } @else {
+    <p>Завантаження...</p>
+  }
+
+  <!-- Для дебагу — показує сирі дані -->
+  <pre style="background:#f5f5f5; padding:1rem; margin-top:1rem">{{ works() | json }}</pre>
+</div>
+
+<!-- src/app/test/test.html -->
+
+<div>
+  <h2>Користувачи з Firebase</h2>
+
+  @if (error()) {
+    <p style="color:red">Помилка: {{ error() }}</p>
+  }
+
+  
+
+  <!-- Для дебагу — показує сирі дані -->
+  <pre style="background:#f5f5f5; padding:1rem; margin-top:1rem">{{ users() | json }}</pre>
+</div>
