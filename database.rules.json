@@ -2,16 +2,23 @@
   "rules": {
     ".read": false,
     ".write": false,
-    "users": {
+
+    "Users": {
+      ".read": "auth !== null && (root.child('Users').child(auth.uid).child('role').val() === 'admin' || root.child('Users').child(auth.uid).child('role').val() === 'moderator')",
+      ".write": "auth !== null && root.child('Users').child(auth.uid).child('role').val() === 'admin'",
+
       "$uid": {
-        ".read": "auth !== null && (auth.uid === $uid || root.child('users').child(auth.uid).child('role').val() === 'admin')",
-        ".write": "auth !== null && root.child('users').child(auth.uid).child('role').val() === 'admin'"
+        ".read": "auth !== null && $uid === auth.uid",
+        ".write": "auth !== null && ($uid === auth.uid || root.child('Users').child(auth.uid).child('role').val() === 'admin')"
       }
     },
+
     "Works": {
       ".read": true,
+
       "$workId": {
-        ".write": "auth !== null && (!data.exists() && newData.child('authorUid').val() === auth.uid || data.exists() && (data.child('authorUid').val() === auth.uid || root.child('users').child(auth.uid).child('role').val() === 'admin'))"
+        ".write": "auth !== null && (data.child('authorUid').val() === auth.uid || !data.exists() || root.child('Users').child(auth.uid).child('role').val() === 'admin' || root.child('Users').child(auth.uid).child('role').val() === 'moderator')",
+        ".validate": "newData.hasChildren(['Title', 'Description', 'authorUid']) && newData.child('Title').isString() && newData.child('Description').isString() && newData.child('authorUid').val() === auth.uid"
       }
     }
   }

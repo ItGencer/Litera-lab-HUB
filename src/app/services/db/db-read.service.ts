@@ -1,16 +1,24 @@
-// src/app/services/db/db-read.service.ts
-
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { inject } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Auth } from '@angular/fire/auth';
+import { from, Observable, switchMap } from 'rxjs';
 import { dbUrl } from './db.config';
 
 @Injectable({ providedIn: 'root' })
 export class DbReadService {
   private http = inject(HttpClient);
-  
+  private auth = inject(Auth);
+
   get<T>(path: string): Observable<T> {
-    return this.http.get<T>(dbUrl(path));
+    return from(
+      this.auth.currentUser
+        ? this.auth.currentUser.getIdToken()
+        : Promise.resolve(null)
+    ).pipe(
+      switchMap(token => {
+        const url = token ? `${dbUrl(path)}?auth=${token}` : dbUrl(path);
+        return this.http.get<T>(url);
+      })
+    );
   }
 }
