@@ -1,0 +1,33 @@
+<header class="header">
+  <div class="container">
+    <div class="header__content">
+      <div class="logo">
+        <span class="logo__icon">📖</span>
+        <span class="logo__text">Література</span>
+      </div>
+
+      <button class="burger" (click)="toggleMenu()" [class.active]="isMenuOpen()">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+
+      <nav class="nav" [class.nav--open]="isMenuOpen()">
+        <ul class="nav__list">
+          @for (item of navItems; track item.label) {
+            <li class="nav__item">
+              <a [href]="item.link" class="nav__link">
+                {{ item.label }}
+                @if (item.hasDropdown) {
+                  <span class="nav__arrow">⌄</span>
+                }
+              </a>
+            </li>
+          }
+        </ul>
+        
+        <button class="btn-login">Увійти</button>
+      </nav>
+    </div>
+  </div>
+</header>
