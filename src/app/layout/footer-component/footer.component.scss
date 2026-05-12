@@ -1,0 +1,173 @@
+$footer-bg: #111e35; // Темно-синій як на фото
+$accent-gold: #d2b48c; // Колір кнопок та посилань
+$text-light: #e2e8f0;
+$transition: all 0.3s ease;
+
+.footer {
+  background-color: $footer-bg;
+  color: $text-light;
+  padding-top: 60px;
+  font-family: sans-serif;
+
+  .container {
+    max-width: 1400px; // Стандарт для десктопа, але розширюється для 8K
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+
+  &__grid {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr 1fr ;
+    gap: 40px;
+    margin-bottom: 50px;
+  }
+
+  &__title {
+    color: white;
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 25px;
+    letter-spacing: 1px;
+  }
+
+  &__logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 20px;
+    color: white;
+  }
+
+  &__description {
+    line-height: 1.6;
+    font-size: 14px;
+    color: rgba($text-light, 0.8);
+  }
+
+  &__list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+
+    li {
+      margin-bottom: 12px;
+    }
+  }
+
+  &__link {
+    color: $text-light;
+    text-decoration: none;
+    transition: $transition;
+    font-size: 15px;
+
+    &:hover {
+      color: $accent-gold;
+      padding-left: 5px;
+    }
+  }
+
+  &__text {
+    font-size: 14px;
+    margin-bottom: 15px;
+  }
+
+  // Форма підписки
+  .subscribe-form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 20px;
+
+    &__input {
+      background: rgba(white, 0.1);
+      border: 1px solid rgba($accent-gold, 0.3);
+      padding: 12px 15px;
+      border-radius: 6px;
+      color: white;
+      outline: none;
+
+      &::placeholder { color: rgba(white, 0.5); }
+    }
+
+    &__btn {
+      background-color: $accent-gold;
+      color: #111e35;
+      border: none;
+      padding: 12px;
+      border-radius: 6px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: $transition;
+
+      &:hover {
+        background-color: lighten($accent-gold, 10%);
+      }
+    }
+  }
+
+  .socials {
+    display: flex;
+    gap: 15px;
+
+    &__link {
+      color: white;
+      background: rgba(white, 0.1);
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      text-decoration: none;
+      font-size: 12px;
+      transition: $transition;
+
+      &:hover {
+        background: $accent-gold;
+        color: #111e35;
+      }
+    }
+  }
+
+  &__bottom {
+    border-top: 1px solid rgba(white, 0.1);
+    padding: 20px 0;
+    text-align: center;
+    font-size: 13px;
+    color: rgba($text-light, 0.6);
+  }
+}
+
+// Адаптивність
+@media (max-width: 1024px) {
+  .footer__grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 600px) {
+  .footer__grid {
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
+  
+  .footer {
+    padding-top: 40px;
+    text-align: center;
+  }
+
+  .footer__logo, .socials {
+    justify-content: center;
+  }
+}
+
+// Для 4K/8K екранів
+@media (min-width: 2560px) {
+  .footer {
+    .container { max-width: 2400px; }
+    &__title { font-size: 24px; }
+    &__link, &__description { font-size: 18px; }
+  }
+}
