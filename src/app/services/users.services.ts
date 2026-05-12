@@ -8,81 +8,77 @@ export interface AppUser {
   role: 'admin' | 'moderator' | 'user' | 'guest';
   banned: boolean;
 }
-@Injectable({
-  providedIn: 'root',
-})
+
+@Injectable({ providedIn: 'root' })
 export class UsersServices {
   private db = inject(Database);
   private auth = inject(Auth);
 
-  // Signal зі списком усіх користувачів
   users = signal<AppUser[]>([]);
-  // Signal з поточним користувачем
   currentUser = signal<AppUser | null>(null);
 
-  // --- Створити / зареєструвати користувача в БД ---
-  async createUser(uid: string, email: string, role: AppUser['role'] = 'user'): Promise<void> {
-    const userRef = ref(this.db, `users/${uid}`);
-    await set(userRef, {
-      email,
-      role,
-      banned: false
-    });
-  }
-
-  // --- Отримати поточного користувача ---
-  async loadCurrentUser(): Promise<void> {
-    const user = this.auth.currentUser;
-    if (!user) return;
-
-    const userRef = ref(this.db, `users/${user.uid}`);
+  /**
+   * Якщо юзер ще не існує в БД — створити з роллю 'user'.
+   * Викликається після кожного входу через Google.
+   */
+  async ensureUser(uid: string, email: string): Promise<void> {
+    const userRef = ref(this.db, `Users/${uid}`); // ← великий 'U'
     const snapshot = await get(userRef);
 
-    if (snapshot.exists()) {
-      this.currentUser.set({ uid: user.uid, ...snapshot.val() });
+    if (!snapshot.exists()) {
+      await set(userRef, {
+        email,
+        role: 'user', // ← всі нові = 'user'
+        banned: false,
+      });
     }
   }
 
-  // --- Завантажити всіх користувачів (тільки admin/moderator) ---
-  loadAllUsers(): void {
-    const usersRef = ref(this.db, 'users');
+  /** Завантажити поточного юзера з БД у сигнал */
+  async loadCurrentUser(): Promise<void> {
+    const fu = this.auth.currentUser;
+    if (!fu) return;
 
+    const userRef = ref(this.db, `Users/${fu.uid}`);
+    const snapshot = await get(userRef);
+
+    if (snapshot.exists()) {
+      this.currentUser.set({ uid: fu.uid, ...snapshot.val() });
+    }
+  }
+
+  /** Всі юзери — тільки для admin/moderator */
+  loadAllUsers(): void {
+    const usersRef = ref(this.db, 'Users');
     onValue(usersRef, (snapshot) => {
       if (!snapshot.exists()) {
         this.users.set([]);
         return;
       }
-
       const list: AppUser[] = [];
       snapshot.forEach((child) => {
         list.push({ uid: child.key!, ...child.val() });
       });
+
       this.users.set(list);
     });
   }
 
-  // --- Змінити роль користувача (тільки admin) ---
   async setRole(uid: string, role: AppUser['role']): Promise<void> {
-    const userRef = ref(this.db, `users/${uid}`);
-    await update(userRef, { role });
+    await update(ref(this.db, `Users/${uid}`), { role });
   }
 
-  // --- Забанити / розбанити ---
   async setBanned(uid: string, banned: boolean): Promise<void> {
-    const userRef = ref(this.db, `users/${uid}`);
-    await update(userRef, { banned });
+    await update(ref(this.db, `Users/${uid}`), { banned });
   }
 
-  // --- Перевірки ролі ---
   isAdmin(): boolean {
     return this.currentUser()?.role === 'admin';
   }
-
   isModerator(): boolean {
-    const role = this.currentUser()?.role;
-    return role === 'admin' || role === 'moderator';
+    const r = this.currentUser()?.role;
+    return r === 'admin' || r === 'moderator';
   }
-
   isBanned(): boolean {
     return this.currentUser()?.banned === true;
   }

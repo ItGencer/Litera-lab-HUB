@@ -1,23 +1,52 @@
-import { Component, signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, effect, inject, signal } from '@angular/core';
+import { toSignal }       from '@angular/core/rxjs-interop';
+import { Auth, user }     from '@angular/fire/auth';
+import { SignInComponent } from '../../components/sign-in-component/sign-in-component';
+import { AuthService } from '../../services/auth.service';
+import { UsersServices } from '../../services/users.services';
 
 @Component({
   selector: 'llh-header-component',
-  imports: [],
+  imports: [SignInComponent],
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss',
 })
-export class HeaderComponent {isMenuOpen = signal(false);
+export class HeaderComponent {
+  private authSvc  = inject(AuthService);
+  private auth     = inject(Auth);
+  public usersSvc  = inject(UsersServices); // публічний — шаблон читає currentUser()
 
-  navItems = [
-    { label: 'Головна', link: '#' },
-    { label: 'Жанри', link: '#', hasDropdown: true },
-    { label: 'Роки публікації', link: '#' },
-    { label: 'Автори', link: '#' },
-    { label: 'По алфавіту', link: '#' },
-    { label: 'Новини', link: '#' }
+  // Firebase-юзер як сигнал (null = не залогінений)
+  public fireUser = toSignal(user(this.auth), { initialValue: null });
+
+  public isMenuOpen   = signal(false);
+  public isSignInOpen = signal(false);
+
+  public navItems = [
+    { label: 'Головна',         link: '/' },
+    { label: 'Жанри',           link: '/genres',   hasDropdown: true },
+    { label: 'Роки публікації', link: '/years' },
+    { label: 'Автори',          link: '/authors' },
+    { label: 'По алфавіту',     link: '/alphabet' },
+    { label: 'Новини',          link: '/news' },
   ];
 
-  toggleMenu() {
-    this.isMenuOpen.update(value => !value);
-  }}
+  constructor() {
+    // Коли Firebase-юзер змінюється — оновити AppUser з БД
+    effect(() => {
+      if (this.fireUser()) {
+        this.usersSvc.loadCurrentUser();
+      } else {
+        this.usersSvc.currentUser.set(null);
+      }
+    });
+  }
+
+  toggleMenu():   void { this.isMenuOpen.update(v => !v); }
+  openSignIn():   void { this.isSignInOpen.set(true); }
+  closeSignIn():  void { this.isSignInOpen.set(false); }
+
+  async onSignOut(): Promise<void> {
+    await this.authSvc.signOut();
+  }
+}

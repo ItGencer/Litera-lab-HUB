@@ -1,0 +1,36 @@
+<!-- Hero блок -->
+<div class="llh-hero">
+  <div class="llh-hero__content">
+    <h1 class="llh-hero__title">Українська та зарубіжна література</h1>
+    <p class="llh-hero__subtitle">
+      Досліджуйте світ літератури: від класики до сучасності, від поезії до прози
+    </p>
+  </div>
+</div>
+
+<!-- Секція новин -->
+<section class="llh-news-section">
+
+  @if (isLoading()) {
+    <div class="llh-news-section__loader">
+      <p>Завантаження статей...</p>
+    </div>
+  }
+
+  @if (error()) {
+    <div class="llh-news-section__error">
+      <p>{{ error() }}</p>
+    </div>
+  }
+
+  @if (!isLoading() && !error()) {
+    <div class="llh-news-grid">
+      @for (article of articles(); track article.id) {
+        <llh-news-cart-component [article]="article" />
+      } @empty {
+        <p class="llh-news-section__empty">Статей поки немає.</p>
+      }
+    </div>
+  }
+
+</section>

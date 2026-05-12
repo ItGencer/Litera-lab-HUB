@@ -1,15 +1,14 @@
 <header class="header">
   <div class="container">
     <div class="header__content">
+
       <div class="logo">
         <span class="logo__icon">📖</span>
         <span class="logo__text">Література</span>
       </div>
 
       <button class="burger" (click)="toggleMenu()" [class.active]="isMenuOpen()">
-        <span></span>
-        <span></span>
-        <span></span>
+        <span></span><span></span><span></span>
       </button>
 
       <nav class="nav" [class.nav--open]="isMenuOpen()">
@@ -25,9 +24,27 @@
             </li>
           }
         </ul>
-        
-        <button class="btn-login">Увійти</button>
+
+        <!-- Залогінений юзер -->
+        @if (fireUser()) {
+          <div class="user-menu">
+            <img
+              class="user-menu__avatar"
+              [src]="fireUser()!.photoURL || 'assets/icons/avatar-default.svg'"
+              [alt]="fireUser()!.displayName || 'Користувач'"
+            />
+            <button class="btn-logout" (click)="onSignOut()">Вийти</button>
+          </div>
+        } @else {
+          <button class="btn-login" (click)="openSignIn()">Увійти</button>
+        }
       </nav>
+
     </div>
   </div>
 </header>
+
+<!-- Модальне вікно входу -->
+@if (isSignInOpen()) {
+  <llh-sign-in-component (close)="closeSignIn()" />
+}

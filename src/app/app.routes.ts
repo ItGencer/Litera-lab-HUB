@@ -1,37 +1,35 @@
 import { Routes } from '@angular/router';
 
 export const routes: Routes = [
-    /*
-    {
+  {
     path: '',
-    loadComponent: () => import('./pages/home/home.component').then(m => m.HomeComponent),
+    loadComponent: () => import('./pages/main-component/main-component').then(m => m.MainComponent),
     title: 'Література — Головна'
   },
   {
     path: 'genres',
-    loadComponent: () => import('./pages/genres/genres.component').then(m => m.GenresComponent),
+    loadComponent: () => import('./pages/genres/genres-component/genres-component').then(m => m.GenresComponent),
     title: 'Жанри'
   },
   {
     path: 'years',
-    loadComponent: () => import('./pages/years/years.component').then(m => m.YearsComponent),
+    loadComponent: () => import('./pages/years-component/years-component').then(m => m.YearsComponent),
     title: 'Роки публікації'
   },
   {
     path: 'authors',
-    loadComponent: () => import('./pages/authors/authors.component').then(m => m.AuthorsComponent),
+    loadComponent: () => import('./pages/authors-component/authors-component').then(m => m.AuthorsComponent),
     title: 'Автори'
   },
   {
     path: 'alphabet',
-    loadComponent: () => import('./pages/alphabet/alphabet.component').then(m => m.AlphabetComponent),
+    loadComponent: () => import('./pages/alphabet-component/alphabet-component').then(m => m.AlphabetComponent),
     title: 'По алфавіту'
   },
   {
     path: 'news',
-    loadComponent: () => import('./pages/news/news.component').then(m => m.NewsComponent),
+    loadComponent: () => import('./pages/news-component/news-component').then(m => m.NewsComponent),
     title: 'Новини'
-  }
-  { path: '**', redirectTo: '' },*/
-  // Перенаправлення, якщо сторінку не знайдено
+  },
+  { path: '**', redirectTo: '' } // Перенаправлення, якщо сторінку не знайдено
 ];
