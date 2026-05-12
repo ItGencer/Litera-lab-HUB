@@ -1,5 +1,4 @@
 import { Component, signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'llh-header-component',
@@ -10,12 +9,12 @@ import { CommonModule } from '@angular/common';
 export class HeaderComponent {isMenuOpen = signal(false);
 
   navItems = [
-    { label: 'Головна', link: '#' },
-    { label: 'Жанри', link: '#', hasDropdown: true },
-    { label: 'Роки публікації', link: '#' },
-    { label: 'Автори', link: '#' },
-    { label: 'По алфавіту', link: '#' },
-    { label: 'Новини', link: '#' }
+    { label: 'Головна',        link: '/' },
+    { label: 'Жанри',          link: '/genres',   hasDropdown: true },
+    { label: 'Роки публікації', link: '/years' },
+    { label: 'Автори',         link: '/authors' },
+    { label: 'По алфавіту',    link: '/alphabet' },
+    { label: 'Новини',         link: '/news' }
   ];
 
   toggleMenu() {

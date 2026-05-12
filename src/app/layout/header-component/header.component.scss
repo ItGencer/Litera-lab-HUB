@@ -27,10 +27,19 @@ $transition: all 0.3s ease;
   display: flex;
   align-items: center;
   gap: 10px;
-  font-size: 24px;
   font-weight: bold;
-  color: $primary-dark;
   cursor: pointer;
+
+  img {
+    width: 40px;
+    height: 40px;
+  }
+
+  span{
+    
+  font-size: 2rem;
+  color: $primary-dark;
+  }
 }
 
 .nav {
@@ -50,7 +59,7 @@ $transition: all 0.3s ease;
     text-decoration: none;
     color: $primary-dark;
     font-weight: 500;
-    font-size: 16px;
+    font-size: 1.3rem;
     transition: $transition;
 
     &:hover {
@@ -68,6 +77,7 @@ $transition: all 0.3s ease;
   font-weight: 600;
   cursor: pointer;
   transition: $transition;
+  font-size: 16px;
 
   &:hover {
     background-color: lighten($primary-dark, 10%);

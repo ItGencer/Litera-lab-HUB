@@ -1,5 +1,3 @@
-// src/app/services/db/db.config.ts
- 
 import { environment } from '../../../environments/environment';
  
 // Береться з environment.ts — одне місце для зміни
