@@ -1,0 +1,144 @@
+$primary-dark: #1e293b;
+$bg-color:     #d2b48c;
+$transition:   all 0.3s ease;
+
+// Затемнений фон з blur
+.modal-backdrop {
+  position:        fixed;
+  inset:           0;              // top/right/bottom/left = 0
+  background:      rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(4px);
+  display:         flex;
+  align-items:     center;
+  justify-content: center;
+  z-index:         2000;
+  padding:         16px;
+  animation:       fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+// Картка
+.modal-card {
+  position:      relative;
+  background:    #fff;
+  border-radius: 20px;
+  padding:       48px 40px 36px;
+  max-width:     440px;
+  width:         100%;
+  text-align:    center;
+  box-shadow:    0 24px 60px rgba(0, 0, 0, 0.25);
+  animation:     slideUp 0.25s ease;
+
+  &__close {
+    position:         absolute;
+    top:              14px;
+    right:            18px;
+    background:       none;
+    border:           none;
+    font-size:        1.4rem;
+    cursor:           pointer;
+    color:            #94a3b8;
+    line-height:      1;
+    transition:       $transition;
+    &:hover { color: $primary-dark; }
+  }
+
+  &__icon {
+    font-size: 3rem;
+    display:   block;
+    margin-bottom: 12px;
+  }
+
+  &__title {
+    font-size:   1.6rem;
+    color:       $primary-dark;
+    margin:      0 0 12px;
+    line-height: 1.3;
+  }
+
+  &__subtitle {
+    font-size:   0.95rem;
+    color:       #64748b;
+    margin:      0 0 28px;
+    line-height: 1.5;
+  }
+
+  &__error {
+    color:         #ef4444;
+    font-size:     0.9rem;
+    margin-bottom: 12px;
+    padding:       8px 12px;
+    background:    #fee2e2;
+    border-radius: 8px;
+  }
+
+  &__note {
+    font-size: 0.78rem;
+    color:     #94a3b8;
+    margin-top: 20px;
+  }
+}
+
+@keyframes slideUp {
+  from { transform: translateY(30px); opacity: 0; }
+  to   { transform: translateY(0);    opacity: 1; }
+}
+
+// Кнопка Google
+.btn-google {
+  display:         flex;
+  align-items:     center;
+  justify-content: center;
+  gap:             12px;
+  width:           100%;
+  padding:         13px 20px;
+  border:          2px solid #e2e8f0;
+  border-radius:   12px;
+  background:      #fff;
+  font-size:       1rem;
+  font-weight:     600;
+  color:           $primary-dark;
+  cursor:          pointer;
+  transition:      $transition;
+
+  &:hover:not(:disabled) {
+    border-color: $bg-color;
+    background:   #fdf8f3;
+  }
+
+  &:disabled {
+    opacity: 0.65;
+    cursor:  not-allowed;
+  }
+
+  &__icon {
+    width:  22px;
+    height: 22px;
+  }
+
+  // Спінер завантаження
+  &__spinner {
+    width:        18px;
+    height:       18px;
+    border:       3px solid #e2e8f0;
+    border-top:   3px solid $primary-dark;
+    border-radius: 50%;
+    animation:    spin 0.7s linear infinite;
+    display:      inline-block;
+  }
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+// Мобільний
+@media (max-width: 480px) {
+  .modal-card {
+    padding: 40px 24px 28px;
+  }
+}

@@ -144,3 +144,36 @@ $transition: all 0.3s ease;
   .logo { font-size: 36px; }
   .btn-login { padding: 12px 40px; font-size: 22px; }
 }
+
+// Дописати в кінець header.component.scss
+
+.user-menu {
+  display:     flex;
+  align-items: center;
+  gap:         10px;
+
+  &__avatar {
+    width:         36px;
+    height:        36px;
+    border-radius: 50%;
+    object-fit:    cover;
+    border:        2px solid $primary-dark;
+  }
+}
+
+.btn-logout {
+  background:    transparent;
+  color:         $primary-dark;
+  border:        2px solid $primary-dark;
+  padding:       6px 16px;
+  border-radius: 8px;
+  font-weight:   600;
+  cursor:        pointer;
+  font-size:     14px;
+  transition:    $transition;
+
+  &:hover {
+    background: $primary-dark;
+    color:      white;
+  }
+}
