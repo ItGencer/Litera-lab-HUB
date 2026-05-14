@@ -1,0 +1,1 @@
+import{Ja as o,Za as n,_a as s,gb as a}from"./chunk-I7WWVTUH.js";var m=class e{static \u0275fac=function(t){return new(t||e)};static \u0275cmp=o({type:e,selectors:[["llh-authors-component"]],decls:2,vars:0,template:function(t,r){t&1&&(n(0,"p"),a(1,"authors-component works!"),s())},encapsulation:2})};export{m as AuthorsComponent};
