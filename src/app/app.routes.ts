@@ -8,7 +8,7 @@ export const routes: Routes = [
   },
   {
     path: 'genres',
-    loadComponent: () => import('./pages/genres/genres-component/genres-component').then(m => m.GenresComponent),
+    loadComponent: () => import('./pages/genre-component/genres-component/genres-component').then(m => m.GenresComponent),
     title: 'Жанри'
   },
   {
@@ -30,6 +30,10 @@ export const routes: Routes = [
     path: 'news',
     loadComponent: () => import('./pages/news-component/news-component').then(m => m.NewsComponent),
     title: 'Новини'
-  },
-  { path: '**', redirectTo: '' } // Перенаправлення, якщо сторінку не знайдено
+  },{
+  path: '**',
+  loadComponent: () =>
+    import('./pages/error-component/error-component').then(m => m.ErrorComponent),
+  title: 'Сторінку не знайдено — Litera Lab HUB'
+  }
 ];
