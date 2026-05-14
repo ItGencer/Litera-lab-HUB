@@ -1,0 +1,1 @@
+import{Ja as n,Za as o,_a as a,gb as p}from"./chunk-I7WWVTUH.js";var m=class t{static \u0275fac=function(e){return new(e||t)};static \u0275cmp=n({type:t,selectors:[["llh-alphabet-component"]],decls:2,vars:0,template:function(e,i){e&1&&(o(0,"p"),p(1,"alphabet-component works!"),a())},encapsulation:2})};export{m as AlphabetComponent};

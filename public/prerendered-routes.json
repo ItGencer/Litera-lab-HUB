@@ -1,0 +1,10 @@
+{
+  "routes": {
+    "/": {},
+    "/alphabet": {},
+    "/authors": {},
+    "/genres": {},
+    "/news": {},
+    "/years": {}
+  }
+}
