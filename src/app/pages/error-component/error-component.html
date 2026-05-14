@@ -1,1 +1,38 @@
-<p>error-component works!</p>
+<!-- ════ HERO — такий же стиль як головна ════ -->
+<section class="error-hero">
+  <!-- Фонові книжкові візерунки (SVG-декор) -->
+  <div class="error-hero__bg-pattern" aria-hidden="true">
+    <span class="bp bp--1">📖</span>
+    <span class="bp bp--2">📚</span>
+    <span class="bp bp--3">📖</span>
+    <span class="bp bp--4">📚</span>
+    <span class="bp bp--5">📖</span>
+  </div>
+
+  <!-- Картка — точний стиль hero-card з головної -->
+  <div class="error-card">
+    <!-- Велике число 404 -->
+    <div class="error-card__number" aria-hidden="true">404</div>
+
+    <!-- Іконка -->
+    <div class="error-card__icon" aria-label="Книгу не знайдено">📕</div>
+
+    <!-- Заголовок — такий самий шрифт і колір як на головній -->
+    <h1 class="error-card__title">Сторінку не знайдено</h1>
+
+    <p class="error-card__subtitle">
+      Схоже, ця глава ще не написана або була переміщена до іншого розділу.
+    </p>
+
+    <!-- Цитата -->
+    <blockquote class="error-card__quote">
+      <p class="error-card__quote-text" id="quote-text">
+        «&nbsp;Не всі, хто блукає, загублені.&nbsp;»
+      </p>
+      <cite class="error-card__quote-author" id="quote-author"> — Дж. Р. Р. Толкін </cite>
+    </blockquote>
+
+    <!-- Кнопка повернення -->
+    <a routerLink="/" class="error-btn"> ← Повернутись на головну </a>
+  </div>
+</section>
