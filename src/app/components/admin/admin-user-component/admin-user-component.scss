@@ -1,0 +1,158 @@
+// Спільні токени — винеси в _tokens.scss і імпортуй скрізь
+$beige:      #f5efe6;
+$beige-dark: #e8dcc8;
+$beige-mid:  #d4c4a8;
+$navy:       #1a2744;
+$gold:       #b8954a;
+$gold-light: #f0c96a;
+$brown:      #5c3d1e;
+$text-muted: #8b7355;
+$white:      #fffdf8;
+$border:     #c9b898;
+
+.ac-wrap { padding: 28px 28px 40px; }
+
+.ac-title {
+  font-family: Georgia, serif;
+  font-size: 20px;
+  font-weight: 700;
+  color: $brown;
+  margin-bottom: 22px;
+  padding-bottom: 12px;
+  border-bottom: 2px solid $beige-mid;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  i { color: $gold; font-size: 20px; }
+}
+
+// Stats
+.ac-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.ac-stat {
+  background: $white;
+  border: 1px solid $border;
+  border-radius: 9px;
+  padding: 14px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.ac-stat-val {
+  font-family: Georgia, serif;
+  font-size: 26px;
+  font-weight: 700;
+  color: $navy;
+}
+
+.ac-stat-lbl {
+  font-size: 11px;
+  font-weight: 700;
+  color: $text-muted;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+// Table
+.ac-table-wrap {
+  background: $white;
+  border: 1px solid $border;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.ac-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+
+  th {
+    text-align: left;
+    padding: 10px 14px;
+    background: $beige-dark;
+    color: $text-muted;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    border-bottom: 2px solid $beige-mid;
+  }
+
+  td {
+    padding: 10px 14px;
+    border-bottom: 1px solid $beige-dark;
+    vertical-align: middle;
+  }
+
+  tr:last-child td { border-bottom: none; }
+
+  tr:hover td { background: rgba(184, 149, 74, 0.04); }
+}
+
+.td-email { font-weight: 500; color: $navy; }
+
+// Badges
+.ac-badge {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.b-admin { background: #e8f0fe; color: #1a3a8f; border: 1px solid #b5caf4; }
+.b-mod   { background: #E1F5EE; color: #0F6E56; border: 1px solid #9FE1CB; }
+.b-user  { background: $beige-dark; color: $text-muted; border: 1px solid $border; }
+.b-ban   { background: #FCEBEB; color: #A32D2D; border: 1px solid #F09595; }
+.b-ok    { background: #EAF3DE; color: #3B6D11; border: 1px solid #C0DD97; }
+
+// Role select
+.ac-select {
+  padding: 5px 8px;
+  border: 1px solid $border;
+  border-radius: 6px;
+  font-size: 12px;
+  background: $beige;
+  color: $navy;
+  font-family: Arial, sans-serif;
+  cursor: pointer;
+  outline: none;
+
+  &:focus  { border-color: $gold; }
+  &:disabled { opacity: 0.45; cursor: not-allowed; }
+}
+
+// Ban button
+.ac-btn-ban {
+  padding: 5px 13px;
+  background: transparent;
+  color: #A32D2D;
+  border: 1px solid #F09595;
+  border-radius: 6px;
+  font-size: 12px;
+  font-family: Arial, sans-serif;
+  cursor: pointer;
+  transition: background 0.15s;
+  &:hover { background: #FCEBEB; }
+}
+
+.ac-btn-unban {
+  color: #0F6E56;
+  border-color: #9FE1CB;
+  &:hover { background: #E1F5EE; }
+}
+
+.ac-empty {
+  text-align: center;
+  padding: 40px;
+  color: $text-muted;
+  i   { font-size: 38px; display: block; margin-bottom: 10px; color: $beige-mid; }
+  p   { font-size: 13px; }
+}

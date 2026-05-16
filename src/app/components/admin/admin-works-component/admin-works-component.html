@@ -1,0 +1,161 @@
+<div class="ac-wrap">
+  <div class="ac-title">
+    <i class="ti ti-feather" aria-hidden="true"></i>
+    Твори
+    <span class="ac-count-pill">{{ worksSvc.works().length }}</span>
+  </div>
+
+  <!-- Tab bar -->
+  <div class="ac-tabs">
+    <button class="ac-tab" [class.active]="activeTab()==='list'" (click)="cancelEdit()">
+      Список творів
+    </button>
+    <button class="ac-tab" [class.active]="activeTab()==='add'" (click)="activeTab.set('add')">
+      {{ editingId() ? 'Редагування' : 'Додати твір' }}
+    </button>
+  </div>
+
+  <!-- ── LIST ────────────────────────────────────── -->
+  <ng-container *ngIf="activeTab() === 'list'">
+    <div class="ac-filter-row">
+      <select [ngModel]="filterGenre()" (ngModelChange)="filterGenre.set($event)">
+        <option value="">Всі жанри</option>
+        <option *ngFor="let g of genres" [value]="g">{{ g }}</option>
+      </select>
+      <select [ngModel]="filterType()" (ngModelChange)="filterType.set($event)">
+        <option value="">Всі типи</option>
+        <option *ngFor="let t of types" [value]="t">{{ t }}</option>
+      </select>
+    </div>
+
+    <div class="ac-table-wrap" *ngIf="filteredWorks().length > 0; else noWorks">
+      <table class="ac-table">
+        <thead>
+          <tr>
+            <th>Назва</th><th>Автор</th><th>Жанр</th>
+            <th>Тип</th><th>Рік</th><th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let w of filteredWorks()">
+            <td class="td-title">{{ w.title }}</td>
+            <td>{{ w.author }}</td>
+            <td><span class="ac-badge b-genre">{{ w.genre }}</span></td>
+            <td>{{ w.type }}</td>
+            <td>{{ w.year ?? '—' }}</td>
+            <td class="td-actions">
+              <button class="ac-btn-edit" (click)="startEdit(w)" title="Редагувати">
+                <i class="ti ti-edit" aria-hidden="true"></i>
+              </button>
+              <button class="ac-btn-del" (click)="deleteWork(w.id!)" title="Видалити">
+                <i class="ti ti-trash" aria-hidden="true"></i>
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <ng-template #noWorks>
+      <div class="ac-empty">
+        <i class="ti ti-books" aria-hidden="true"></i>
+        <p>Творів не знайдено</p>
+      </div>
+    </ng-template>
+  </ng-container>
+
+  <!-- ── ADD / EDIT FORM ─────────────────────────── -->
+  <ng-container *ngIf="activeTab() === 'add'">
+    <div class="ac-form-card">
+
+      <div class="ac-form-grid">
+        <div class="ac-field">
+          <label>Назва твору</label>
+          <input [ngModel]="form().title"
+                 (ngModelChange)="setField('title', $event)"
+                 placeholder="Введіть назву...">
+        </div>
+        <div class="ac-field">
+          <label>Автор</label>
+          <input [ngModel]="form().author"
+                 (ngModelChange)="setField('author', $event)"
+                 placeholder="Ім'я автора">
+        </div>
+      </div>
+
+      <div class="ac-form-grid">
+        <div class="ac-field">
+          <label>Жанр</label>
+          <select [ngModel]="form().genre" (ngModelChange)="setField('genre', $event)">
+            <option *ngFor="let g of genres" [value]="g">{{ g }}</option>
+          </select>
+        </div>
+        <div class="ac-field">
+          <label>Тип</label>
+          <select [ngModel]="form().type" (ngModelChange)="setField('type', $event)">
+            <option *ngFor="let t of types" [value]="t">{{ t }}</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="ac-form-grid ac-form-grid--1">
+        <div class="ac-field">
+          <label>Рік написання</label>
+          <input type="number"
+                 [ngModel]="form().year"
+                 (ngModelChange)="setField('year', +$event)"
+                 placeholder="напр. 1840">
+        </div>
+      </div>
+
+      <div class="ac-field">
+        <label>Опис ({{ descText().length }} / {{ DESC_MAX }})</label>
+        <textarea rows="3"
+                  [ngModel]="descText()"
+                  (ngModelChange)="descText.set($event.slice(0, DESC_MAX))"
+                  placeholder="Короткий опис твору..."></textarea>
+      </div>
+
+      <div class="ac-divider"></div>
+
+      <div class="ac-parts-head">
+        <span class="ac-parts-label">
+          <i class="ti ti-list" aria-hidden="true"></i> Частини твору
+        </span>
+        <button class="ac-btn-add-part" (click)="addPart()">
+          <i class="ti ti-plus" aria-hidden="true"></i> Додати частину
+        </button>
+      </div>
+
+      <div class="ac-part-block" *ngFor="let p of form().parts; let i = index">
+        <div class="ac-part-top">
+          <input [value]="p.title"
+                 (input)="updatePart(i, 'title', $any($event.target).value)"
+                 placeholder="Назва частини {{ i + 1 }}">
+          <button class="ac-btn-del"
+                  (click)="removePart(i)"
+                  *ngIf="(form().parts?.length ?? 0) > 1"
+                  title="Видалити частину">
+            <i class="ti ti-trash" aria-hidden="true"></i>
+          </button>
+        </div>
+        <textarea rows="5"
+                  [value]="p.content"
+                  (input)="updatePart(i, 'content', $any($event.target).value)"
+                  placeholder="Текст частини..."></textarea>
+      </div>
+
+      <div class="ac-form-actions">
+        <button class="ac-btn-primary" (click)="onSubmit()" [disabled]="isSaving()">
+          <i class="ti ti-device-floppy" aria-hidden="true"></i>
+          {{ isSaving() ? 'Збереження...' : (editingId() ? 'Зберегти зміни' : 'Зберегти твір') }}
+        </button>
+        <button class="ac-btn-outline" (click)="cancelEdit()">Скасувати</button>
+        <span *ngIf="saved()" class="ac-saved-msg">
+          <i class="ti ti-check" aria-hidden="true"></i> Збережено
+        </span>
+      </div>
+
+    </div>
+  </ng-container>
+</div>

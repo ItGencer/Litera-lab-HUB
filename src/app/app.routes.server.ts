@@ -26,6 +26,14 @@ export const serverRoutes: ServerRoute[] = [
     renderMode: RenderMode.Prerender
   },
   {
+    path: 'admin',
+    renderMode: RenderMode.Server
+  },
+  {
+    path: 'profile',
+    renderMode: RenderMode.Server
+  },
+  {
     path: '**', // решта (404 → redirect)
     renderMode: RenderMode.Server
   }

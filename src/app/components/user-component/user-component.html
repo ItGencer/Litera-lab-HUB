@@ -1,0 +1,308 @@
+<div class="uc-page" *ngIf="usersSvc.currentUser() as cu; else noUser">
+
+  <!-- ══ Hero / Profile header ══════════════════════════════ -->
+  <div class="uc-hero">
+    <div class="uc-hero-inner">
+      <div class="uc-avatar">
+        <img *ngIf="fireUser()?.photoURL as url; else initBlock"
+             [src]="url" alt="avatar">
+        <ng-template #initBlock>{{ initials() }}</ng-template>
+      </div>
+      <div class="uc-hero-info">
+        <h1 class="uc-name">
+          {{ profileForm().displayName || fireUser()?.displayName || cu.email }}
+        </h1>
+        <p class="uc-email">
+          <i class="ti ti-mail" aria-hidden="true"></i>
+          {{ cu.email }}
+        </p>
+        <span class="uc-badge" [class]="roleBadgeClass()">{{ cu.role }}</span>
+        <span *ngIf="cu.banned" class="uc-badge uc-badge-ban">заблокований</span>
+      </div>
+    </div>
+
+    <!-- Tabs nav -->
+    <nav class="uc-tabs-nav" aria-label="Розділи профілю">
+      <button class="uc-tab"
+              [class.active]="activeTab() === 'profile'"
+              (click)="activeTab.set('profile')">
+        <i class="ti ti-user" aria-hidden="true"></i> Мій профіль
+      </button>
+      <button class="uc-tab"
+              [class.active]="activeTab() === 'works'"
+              (click)="activeTab.set('works')">
+        <i class="ti ti-books" aria-hidden="true"></i>
+        Мої твори
+        <span class="uc-count" *ngIf="myWorks().length">{{ myWorks().length }}</span>
+      </button>
+      <button class="uc-tab"
+              [class.active]="activeTab() === 'add'"
+              (click)="activeTab.set('add'); cancelEdit()">
+        <i class="ti ti-plus" aria-hidden="true"></i>
+        {{ editingId() ? 'Редагування' : 'Додати твір' }}
+      </button>
+    </nav>
+  </div>
+
+  <!-- ══ TAB: Profile ══════════════════════════════════════ -->
+  <div *ngIf="activeTab() === 'profile'" class="uc-content">
+
+    <div class="uc-card">
+      <div class="uc-card-head">
+        <h2><i class="ti ti-user-edit" aria-hidden="true"></i>Редагування профілю</h2>
+      </div>
+      <div class="uc-card-body">
+
+        <div class="uc-form-grid">
+          <div class="uc-field">
+            <label>Відображуване ім'я</label>
+            <input type="text"
+                   [ngModel]="profileForm().displayName"
+                   (ngModelChange)="updateProfile('displayName', $event)"
+                   placeholder="Ваше ім'я...">
+          </div>
+          <div class="uc-field">
+            <label>Email</label>
+            <input type="email" [value]="cu.email" disabled class="disabled">
+          </div>
+        </div>
+
+        <div class="uc-form-grid">
+          <div class="uc-field">
+            <label>Місто / регіон</label>
+            <input type="text"
+                   [ngModel]="profileForm().city"
+                   (ngModelChange)="updateProfile('city', $event)"
+                   placeholder="напр. Львів">
+          </div>
+          <div class="uc-field">
+            <label>Рік народження</label>
+            <input type="number"
+                   [ngModel]="profileForm().birthYear"
+                   (ngModelChange)="updateProfile('birthYear', $event)"
+                   placeholder="напр. 1985">
+          </div>
+        </div>
+
+        <div class="uc-field uc-field-full">
+          <label>Про себе ({{ profileForm().about.length }} / {{ ABOUT_MAX }})</label>
+          <textarea rows="3"
+                    [ngModel]="profileForm().about"
+                    (ngModelChange)="updateProfile('about', $event.slice(0, ABOUT_MAX))"
+                    placeholder="Коротко про себе..."></textarea>
+        </div>
+
+        <div class="uc-actions">
+          <button class="uc-btn-primary"
+                  (click)="saveProfile()"
+                  [disabled]="isSavingProfile()">
+            <i class="ti ti-device-floppy" aria-hidden="true"></i>
+            {{ isSavingProfile() ? 'Збереження...' : 'Зберегти зміни' }}
+          </button>
+          <span *ngIf="profileSaved()" class="uc-saved-msg">
+            <i class="ti ti-check" aria-hidden="true"></i> Збережено
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <div class="uc-card">
+      <div class="uc-card-head">
+        <h2><i class="ti ti-info-circle" aria-hidden="true"></i>Інформація акаунту</h2>
+      </div>
+      <div class="uc-card-body">
+        <div class="uc-info-grid">
+          <div class="uc-info-cell">
+            <div class="uc-info-label">Роль</div>
+            <span class="uc-badge" [class]="roleBadgeClass()">{{ cu.role }}</span>
+          </div>
+          <div class="uc-info-cell">
+            <div class="uc-info-label">Статус</div>
+            <span [class]="cu.banned ? 'uc-status-ban' : 'uc-status-ok'">
+              {{ cu.banned ? 'Заблокований' : 'Активний' }}
+            </span>
+          </div>
+          <div class="uc-info-cell">
+            <div class="uc-info-label">Творів додано</div>
+            <span class="uc-info-val">{{ myWorks().length }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ══ TAB: My works ════════════════════════════════════ -->
+  <div *ngIf="activeTab() === 'works'" class="uc-content">
+
+    <div class="uc-card">
+      <div class="uc-card-head">
+        <h2><i class="ti ti-books" aria-hidden="true"></i>Мої твори</h2>
+        <button class="uc-btn-sm" (click)="activeTab.set('add')">
+          <i class="ti ti-plus" aria-hidden="true"></i> Додати
+        </button>
+      </div>
+      <div class="uc-card-body">
+
+        <div class="uc-filter-row">
+          <select [ngModel]="filterGenre()" (ngModelChange)="filterGenre.set($event)">
+            <option value="">Всі жанри</option>
+            <option *ngFor="let g of genres" [value]="g">{{ g }}</option>
+          </select>
+          <select [ngModel]="filterType()" (ngModelChange)="filterType.set($event)">
+            <option value="">Всі типи</option>
+            <option *ngFor="let t of types" [value]="t">{{ t }}</option>
+          </select>
+        </div>
+
+        <ng-container *ngIf="myWorks().length > 0; else noWorks">
+          <div class="uc-work-card" *ngFor="let w of myWorks()">
+            <div class="uc-work-info">
+              <h3>{{ w.title }}</h3>
+              <p class="uc-work-date">Додано: {{ formatDate(w.createdAt) }}</p>
+              <div class="uc-work-pills">
+                <span class="uc-pill uc-pill-genre">{{ w.genre }}</span>
+                <span class="uc-pill uc-pill-type">{{ w.type }}</span>
+                <span class="uc-pill uc-pill-year" *ngIf="w.year">{{ w.year }}</span>
+              </div>
+            </div>
+            <div class="uc-work-actions">
+              <button class="uc-btn-outline" (click)="startEdit(w)" title="Редагувати">
+                <i class="ti ti-edit" aria-hidden="true"></i>
+              </button>
+              <button class="uc-btn-danger" (click)="deleteWork(w.id!)" title="Видалити">
+                <i class="ti ti-trash" aria-hidden="true"></i>
+              </button>
+            </div>
+          </div>
+        </ng-container>
+
+        <ng-template #noWorks>
+          <div class="uc-empty">
+            <i class="ti ti-books" aria-hidden="true"></i>
+            <p>Ви ще не додали жодного твору</p>
+          </div>
+        </ng-template>
+
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ══ TAB: Add / Edit work ═════════════════════════════ -->
+  <div *ngIf="activeTab() === 'add'" class="uc-content">
+
+    <div class="uc-card">
+      <div class="uc-card-head">
+        <h2>
+          <i class="ti ti-pencil-plus" aria-hidden="true"></i>
+          {{ editingId() ? 'Редагування твору' : 'Новий твір' }}
+        </h2>
+      </div>
+      <div class="uc-card-body">
+
+        <div class="uc-form-grid">
+          <div class="uc-field">
+            <label>Назва твору</label>
+            <input type="text"
+                   [ngModel]="workForm().title"
+                   (ngModelChange)="updateField('title', $event)"
+                   placeholder="Введіть назву...">
+          </div>
+          <div class="uc-field">
+            <label>Автор</label>
+            <input type="text"
+                   [ngModel]="workForm().author"
+                   (ngModelChange)="updateField('author', $event)"
+                   placeholder="Ім'я автора">
+          </div>
+        </div>
+
+        <div class="uc-form-grid">
+          <div class="uc-field">
+            <label>Жанр</label>
+            <select [ngModel]="workForm().genre"
+                    (ngModelChange)="updateField('genre', $event)">
+              <option *ngFor="let g of genres" [value]="g">{{ g }}</option>
+            </select>
+          </div>
+          <div class="uc-field">
+            <label>Тип</label>
+            <select [ngModel]="workForm().type"
+                    (ngModelChange)="updateField('type', $event)">
+              <option *ngFor="let t of types" [value]="t">{{ t }}</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="uc-form-grid">
+          <div class="uc-field">
+            <label>Рік написання</label>
+            <input type="number"
+                   [ngModel]="workForm().year"
+                   (ngModelChange)="updateField('year', +$event)"
+                   placeholder="напр. 1840">
+          </div>
+        </div>
+
+        <div class="uc-field uc-field-full">
+          <label>Опис ({{ descText().length }} / {{ DESC_MAX }})</label>
+          <textarea rows="3"
+                    [ngModel]="descText()"
+                    (ngModelChange)="descText.set($event.slice(0, DESC_MAX))"
+                    placeholder="Короткий опис твору..."></textarea>
+        </div>
+
+        <div class="uc-divider"></div>
+
+        <div class="uc-parts-head">
+          <span><i class="ti ti-list" aria-hidden="true"></i> Частини твору</span>
+          <button class="uc-btn-sm" (click)="addPart()">
+            <i class="ti ti-plus" aria-hidden="true"></i> Додати частину
+          </button>
+        </div>
+
+        <div class="uc-part-block" *ngFor="let p of workForm().parts; let i = index">
+          <div class="uc-part-top">
+            <input type="text"
+                   [value]="p.title"
+                   (input)="updatePart(i, 'title', $any($event.target).value)"
+                   placeholder="Назва частини {{ i + 1 }}">
+            <button class="uc-btn-danger" (click)="removePart(i)"
+                    *ngIf="(workForm().parts?.length ?? 0) > 1">
+              <i class="ti ti-trash" aria-hidden="true"></i>
+            </button>
+          </div>
+          <textarea rows="6"
+                    [value]="p.content"
+                    (input)="updatePart(i, 'content', $any($event.target).value)"
+                    placeholder="Текст частини..."></textarea>
+        </div>
+
+        <div class="uc-actions">
+          <button class="uc-btn-primary"
+                  (click)="saveWork()"
+                  [disabled]="isSavingWork()">
+            <i class="ti ti-device-floppy" aria-hidden="true"></i>
+            {{ isSavingWork() ? 'Збереження...' : (editingId() ? 'Зберегти зміни' : 'Зберегти твір') }}
+          </button>
+          <button class="uc-btn-outline" (click)="cancelEdit()">Скасувати</button>
+          <span *ngIf="workSaved()" class="uc-saved-msg">
+            <i class="ti ti-check" aria-hidden="true"></i> Збережено
+          </span>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<!-- Not logged in -->
+<ng-template #noUser>
+  <div class="uc-no-user">
+    <i class="ti ti-user-off" aria-hidden="true"></i>
+    <p>Ви не увійшли до акаунту</p>
+  </div>
+</ng-template>
