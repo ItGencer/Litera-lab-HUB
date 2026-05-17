@@ -20,59 +20,9 @@
     </div>
   </div>
 
-  <!-- Table -->
-  <div class="ac-table-wrap">
-    <table class="ac-table" *ngIf="usersSvc.users().length > 0; else noUsers">
-      <thead>
-        <tr>
-          <th>Email</th>
-          <th>Роль</th>
-          <th>Статус</th>
-          <th>Змінити роль</th>
-          <th>Дія</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let u of usersSvc.users()">
-          <td class="td-email">{{ u.email }}</td>
-          <td>
-            <span class="ac-badge" [class]="roleBadgeClass(u.role)">
-              {{ u.role }}
-            </span>
-          </td>
-          <td>
-            <span class="ac-badge" [class]="u.banned ? 'b-ban' : 'b-ok'">
-              {{ u.banned ? 'заблокований' : 'активний' }}
-            </span>
-          </td>
-          <td>
-            <select
-              class="ac-select"
-              [value]="u.role"
-              [disabled]="u.banned"
-              (change)="onRoleChange(u.uid, $event)"
-            >
-              <option *ngFor="let r of roles" [value]="r">{{ r }}</option>
-            </select>
-          </td>
-          <td>
-            <button
-              class="ac-btn-ban"
-              [class.ac-btn-unban]="u.banned"
-              (click)="toggleBan(u)"
-            >
-              {{ u.banned ? 'Розбанити' : 'Бан' }}
-            </button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-
-    <ng-template #noUsers>
-      <div class="ac-empty">
-        <i class="ti ti-users-off" aria-hidden="true"></i>
-        <p>Користувачів не знайдено</p>
-      </div>
-    </ng-template>
-  </div>
+  <!-- Table — передаємо дані через signal inputs -->
+  <llh-user-table-component
+    [users]="usersSvc.users()"
+    [roles]="roles"
+  />
 </div>

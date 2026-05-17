@@ -1,5 +1,4 @@
 <div class="ap-layout">
-
   <!-- ══ Sidebar ═══════════════════════════════════════════ -->
   <aside class="ap-sidebar">
     <div class="ap-logo">
@@ -9,38 +8,46 @@
 
     <nav class="ap-nav">
       <p class="ap-nav-label">Адмін-панель</p>
-
-      <button
-        *ngFor="let item of navMain"
-        class="ap-nav-item"
-        [class.active]="activeTab() === item.id"
-        (click)="setTab(item.id)"
-      >
-        <i class="ti {{ item.icon }}" aria-hidden="true"></i>
-        {{ item.label }}
-      </button>
+      @for (item of navMain; track item) {
+        <button
+          class="ap-nav-item"
+          [class.active]="activeTab() === item.id"
+          (click)="setTab(item.id)"
+        >
+          <i class="ti {{ item.icon }}" aria-hidden="true"></i>
+          {{ item.label }}
+        </button>
+      }
     </nav>
 
     <div class="ap-sidebar-footer">
       <p class="ap-nav-label">Загальне</p>
-      <button
-        *ngFor="let item of navBottom"
-        class="ap-nav-item"
-        [class.active]="activeTab() === item.id"
-        (click)="setTab(item.id)"
-      >
-        <i class="ti {{ item.icon }}" aria-hidden="true"></i>
-        {{ item.label }}
-      </button>
+      @for (item of navBottom; track item.id) {
+        <button
+          class="ap-nav-item"
+          [class.active]="activeTab() === item.id"
+          (click)="setTab(item.id)"
+        >
+          <i class="ti {{ item.icon }}" aria-hidden="true"></i>
+          {{ item.label }}
+        </button>
+      }
     </div>
   </aside>
 
   <!-- ══ Main content ═══════════════════════════════════════ -->
   <main class="ap-main">
-    <llh-admin-user-component   *ngIf="activeTab() === 'users'"   />
-    <llh-admin-works-component   *ngIf="activeTab() === 'works'"   />
-    <llh-admin-news-component *ngIf="activeTab() === 'news'" />
-    <llh-user-component *ngIf="activeTab() === 'profile'" />
+    @if (activeTab() === 'users') {
+      <llh-admin-user-component />
+    }
+    @if (activeTab() === 'works') {
+      <llh-admin-works-component />
+    }
+    @if (activeTab() === 'news') {
+      <llh-admin-news-component />
+    }
+    @if (activeTab() === 'profile') {
+      <llh-user-component />
+    }
   </main>
-
 </div>

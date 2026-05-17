@@ -1,27 +1,7 @@
 import { inject, Injectable, signal } from '@angular/core';
 import { Auth } from '@angular/fire/auth';
 import { Database, ref, get, update, set } from '@angular/fire/database';
-
-// ── Інтерфейси ────────────────────────────────────────────────────────────────
-
-export interface UserProfile {
-  displayName?: string;
-  city?: string;
-  birthYear?: string;
-  about?: string;
-}
-
-export interface AppUser {
-  uid: string;
-  displayName: string | null;
-  email: string | null;
-  photoURL: string | null;
-  role: string | null; // 'admin' | 'moderator' | 'user'
-  banned: boolean; // ← було відсутнє
-  profile?: UserProfile; // ← було відсутнє
-}
-
-// ── Сервіс ────────────────────────────────────────────────────────────────────
+import { AppUser } from '../interface/user.interface';
 
 @Injectable({ providedIn: 'root' })
 export class UsersServices {

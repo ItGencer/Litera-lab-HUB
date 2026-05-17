@@ -1,24 +1,7 @@
 import { inject, Injectable, signal } from '@angular/core';
 import { Database, ref, get, set, update, remove, push, onValue } from '@angular/fire/database';
 import { Auth } from '@angular/fire/auth';
-
-export interface WorkPart {
-  title: string;
-  content: string;
-}
-
-export interface Work {
-  id?: string;
-  title: string;
-  author: string;
-  genre: string;
-  type: string;
-  year: number | null;
-  description: string[];
-  parts: WorkPart[];
-  createdAt: number;
-  createdBy: string;
-}
+import { Work } from '../interface/work.interface';
 
 export const GENRES = ['Лірика', 'Епос', 'Драма', 'Лірично-епічний'];
 export const WORK_TYPES = [
@@ -35,21 +18,13 @@ export const WORK_TYPES = [
   'Байка',
 ];
 
-function splitToChunks(text: string, size: number): string[] {
-  const chunks: string[] = [];
-  for (let i = 0; i < text.length; i += size) {
-    chunks.push(text.slice(i, i + size));
-  }
-  return chunks.length ? chunks : [''];
-}
-
 @Injectable({ providedIn: 'root' })
 export class WorksService {
   private db = inject(Database);
   private auth = inject(Auth);
+  private isLoading = signal(false);
 
-  works = signal<Work[]>([]);
-  isLoading = signal(false);
+  public works = signal<Work[]>([]);
 
   loadAll(): void {
     this.isLoading.set(true);
@@ -72,15 +47,22 @@ export class WorksService {
     const uid = this.auth.currentUser?.uid ?? 'unknown';
     await push(ref(this.db, 'Works'), {
       ...work,
-      description: splitToChunks(work.description.join(''), 1000),
+      description: this.splitToChunks(work.description.join(''), 1000),
       createdAt: Date.now(),
       createdBy: uid,
     });
   }
+  splitToChunks(text: string, size: number): string[] {
+    const chunks: string[] = [];
+    for (let i = 0; i < text.length; i += size) {
+      chunks.push(text.slice(i, i + size));
+    }
+    return chunks.length ? chunks : [''];
+  }
 
   async update(id: string, data: Partial<Omit<Work, 'id'>>): Promise<void> {
     if (data.description) {
-      data = { ...data, description: splitToChunks(data.description.join(''), 1000) };
+      data = { ...data, description: this.splitToChunks(data.description.join(''), 1000) };
     }
     await update(ref(this.db, `Works/${id}`), data);
   }

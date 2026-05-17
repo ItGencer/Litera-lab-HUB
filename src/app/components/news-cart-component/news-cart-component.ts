@@ -1,5 +1,5 @@
 import { Component, input } from '@angular/core';
-import { Article } from '../../interface/article.model';
+import { Article } from '../../interface/article.interface';
 
 @Component({
   selector: 'llh-news-cart-component',

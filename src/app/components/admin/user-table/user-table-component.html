@@ -1,0 +1,66 @@
+<div class="ut-wrap">
+  @if (users().length > 0) {
+
+    <table class="ut-table">
+      <thead>
+        <tr>
+          <th>Email</th>
+          <th>Роль</th>
+          <th>Статус</th>
+          <th>Змінити роль</th>
+          <th>Дія</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (user of users(); track user.uid) {
+          <tr>
+            <td class="td-email">{{ user.email }}</td>
+
+            <td>
+              <span class="ut-badge" [class]="roleBadgeClass(user.role)">
+                {{ user.role }}
+              </span>
+            </td>
+
+            <td>
+              <span class="ut-badge" [class]="user.banned ? 'b-ban' : 'b-ok'">
+                {{ user.banned ? 'заблокований' : 'активний' }}
+              </span>
+            </td>
+
+            <td>
+              <select
+                class="ut-select"
+                [value]="user.role"
+                [disabled]="user.banned"
+                (change)="onRoleChange(user.uid, $event)"
+              >
+                @for (role of roles(); track $index) {
+                  <option [value]="role">{{ role }}</option>
+                }
+              </select>
+            </td>
+
+            <td>
+              <button
+                class="ut-btn-ban"
+                [class.ut-btn-unban]="user.banned"
+                (click)="toggleBan(user)"
+              >
+                {{ user.banned ? 'Розбанити' : 'Бан' }}
+              </button>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+
+  } @else {
+
+    <div class="ut-empty">
+      <i class="ti ti-users-off" aria-hidden="true"></i>
+      <p>Користувачів не знайдено</p>
+    </div>
+
+  }
+</div>

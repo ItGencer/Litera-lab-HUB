@@ -1,7 +1,8 @@
 import { Component, inject, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule }  from '@angular/forms';
-import { GENRES, Work, WORK_TYPES, WorkPart, WorksService } from '../../../services/works.service';
+import { GENRES, WORK_TYPES, WorksService } from '../../../services/works.service';
+import { Work, WorkPart, WorkType } from '../../../interface/work.interface';
 
 @Component({
   selector: 'llh-admin-works-component',
@@ -12,18 +13,19 @@ import { GENRES, Work, WORK_TYPES, WorkPart, WorksService } from '../../../servi
 export class AdminWorksComponent {
   worksSvc = inject(WorksService);
 
-  genres = GENRES;
-  types  = WORK_TYPES;
+  public activeTab   = signal<'list' | 'add'>('list');
+  public editingId   = signal<string | null>(null);
+  public filterGenre = signal('');
+  public filterType  = signal('');
+  public isSaving    = signal(false);
+  public saved       = signal(false);
+  public descText = signal('');
 
-  activeTab   = signal<'list' | 'add'>('list');
-  editingId   = signal<string | null>(null);
-  filterGenre = signal('');
-  filterType  = signal('');
-  isSaving    = signal(false);
-  saved       = signal(false);
-
-  DESC_MAX = 2000;
-  descText = signal('');
+  public worksType: WorkType = {
+    genres: GENRES,
+    types: WORK_TYPES,
+    desc_max: 2000,
+  }
 
   emptyForm = (): Partial<Work> => ({
     title: '', author: '', genre: GENRES[0], type: WORK_TYPES[0],
@@ -32,42 +34,42 @@ export class AdminWorksComponent {
   form = signal<Partial<Work>>(this.emptyForm());
 
   filteredWorks = computed(() =>
-    this.worksSvc.works().filter(w =>
-      (!this.filterGenre() || w.genre === this.filterGenre()) &&
-      (!this.filterType()  || w.type  === this.filterType())
+    this.worksSvc.works().filter(works =>
+      (!this.filterGenre() || works.genre === this.filterGenre()) &&
+      (!this.filterType()  || works.type  === this.filterType())
     )
   );
 
   // Form field helpers
   setField<K extends keyof Work>(key: K, val: Work[K]): void {
-    this.form.update(f => ({ ...f, [key]: val }));
+    this.form.update(form => ({ ...form, [key]: val }));
   }
 
   addPart(): void {
-    this.form.update(f => ({
-      ...f, parts: [...(f.parts ?? []), { title: '', content: '' }],
+    this.form.update(form => ({
+      ...form, parts: [...(form.parts ?? []), { title: '', content: '' }],
     }));
   }
 
-  removePart(i: number): void {
-    this.form.update(f => ({
-      ...f, parts: (f.parts ?? []).filter((_, idx) => idx !== i),
+  removePart(index: number): void {
+    this.form.update(form => ({
+      ...form, parts: (form.parts ?? []).filter((_, idx) => idx !== index),
     }));
   }
 
-  updatePart(i: number, key: keyof WorkPart, val: string): void {
-    this.form.update(f => {
-      const parts = [...(f.parts ?? [])];
-      parts[i] = { ...parts[i], [key]: val };
-      return { ...f, parts };
+  updatePart(index: number, key: keyof WorkPart, val: string): void {
+    this.form.update(form => {
+      const parts = [...(form.parts ?? [])];
+      parts[index] = { ...parts[index], [key]: val };
+      return { ...form, parts };
     });
   }
 
   // Edit existing
-  startEdit(w: Work): void {
-    this.editingId.set(w.id!);
-    this.form.set({ ...w });
-    this.descText.set(w.description.join(''));
+  startEdit(work: Work): void {
+    this.editingId.set(work.id!);
+    this.form.set({ ...work });
+    this.descText.set(work.description.join(''));
     this.activeTab.set('add');
   }
 
@@ -79,18 +81,18 @@ export class AdminWorksComponent {
   }
 
   async onSubmit(): Promise<void> {
-    const f = this.form();
-    if (!f.title?.trim() || !f.author?.trim()) return;
+    const form = this.form();
+    if (!form.title?.trim() || !form.author?.trim()) return;
 
     this.isSaving.set(true);
     const payload = {
-      title:       f.title!,
-      author:      f.author!,
-      genre:       f.genre!,
-      type:        f.type!,
-      year:        f.year ?? null,
+      title:       form.title!,
+      author:      form.author!,
+      genre:       form.genre!,
+      type:        form.type!,
+      year:        form.year ?? null,
       description: [this.descText()],
-      parts:       f.parts ?? [],
+      parts:       form.parts ?? [],
     };
 
     if (this.editingId()) {

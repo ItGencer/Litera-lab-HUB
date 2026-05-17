@@ -7,14 +7,7 @@ import { UserComponent } from '../../user-component/user-component';
 import { UsersServices } from '../../../services/users.services';
 import { NewsService } from '../../../services/news.service';
 import { WorksService } from '../../../services/works.service';
-
-export type AdminTab = 'users' | 'works' | 'news' | 'profile';
-
-interface NavItem {
-  id: AdminTab;
-  label: string;
-  icon: string;
-}
+import { AdminTab, NavItem } from '../../../interface/nav-item.interface';
 
 @Component({
   selector: 'llh-admin-panel-component',
@@ -33,15 +26,15 @@ export class AdminPanelComponent implements OnInit {
   private worksSvc = inject(WorksService);
   private newsSvc  = inject(NewsService);
 
-  activeTab = signal<AdminTab>('users');
+  public activeTab = signal<AdminTab>('users');
 
-  navMain: NavItem[] = [
+  public navMain: NavItem[] = [
     { id: 'users', label: 'Користувачі', icon: 'ti-users'  },
     { id: 'works', label: 'Твори',       icon: 'ti-feather' },
     { id: 'news',  label: 'Новини',      icon: 'ti-news'   },
   ];
 
-  navBottom: NavItem[] = [
+  public navBottom: NavItem[] = [
     { id: 'profile', label: 'Мій профіль', icon: 'ti-user-circle' },
   ];
 

@@ -1,12 +1,16 @@
-<div class="uc-page" *ngIf="usersSvc.currentUser() as cu; else noUser">
+@if(usersSvc.currentUser(); as cu){
+<div class="uc-page" >
 
   <!-- ══ Hero / Profile header ══════════════════════════════ -->
   <div class="uc-hero">
     <div class="uc-hero-inner">
       <div class="uc-avatar">
-        <img *ngIf="fireUser()?.photoURL as url; else initBlock"
-             [src]="url" alt="avatar">
-        <ng-template #initBlock>{{ initials() }}</ng-template>
+        @if (fireUser()?.photoURL; as url){
+        <img
+        [src]="url" alt="avatar">
+        } @else {
+        <ng-template initBlock>{{ initials() }}</ng-template>
+        }
       </div>
       <div class="uc-hero-info">
         <h1 class="uc-name">
@@ -17,7 +21,9 @@
           {{ cu.email }}
         </p>
         <span class="uc-badge" [class]="roleBadgeClass()">{{ cu.role }}</span>
-        <span *ngIf="cu.banned" class="uc-badge uc-badge-ban">заблокований</span>
+        @if (cu.banned) {
+        <span class="uc-badge uc-badge-ban">заблокований</span>
+        }
       </div>
     </div>
 
@@ -45,7 +51,8 @@
   </div>
 
   <!-- ══ TAB: Profile ══════════════════════════════════════ -->
-  <div *ngIf="activeTab() === 'profile'" class="uc-content">
+  @if (activeTab() === 'profile') {
+  <div class="uc-content">
 
     <div class="uc-card">
       <div class="uc-card-head">
@@ -85,10 +92,10 @@
         </div>
 
         <div class="uc-field uc-field-full">
-          <label>Про себе ({{ profileForm().about.length }} / {{ ABOUT_MAX }})</label>
+          <label>Про себе ({{ profileForm().about.length }} / {{ workType.about_max }})</label>
           <textarea rows="3"
                     [ngModel]="profileForm().about"
-                    (ngModelChange)="updateProfile('about', $event.slice(0, ABOUT_MAX))"
+                    (ngModelChange)="updateProfile('about', $event.slice(0, workType.about_max))"
                     placeholder="Коротко про себе..."></textarea>
         </div>
 
@@ -99,9 +106,10 @@
             <i class="ti ti-device-floppy" aria-hidden="true"></i>
             {{ isSavingProfile() ? 'Збереження...' : 'Зберегти зміни' }}
           </button>
-          <span *ngIf="profileSaved()" class="uc-saved-msg">
+          @if (profileSaved()) {
+          <span class="uc-saved-msg">
             <i class="ti ti-check" aria-hidden="true"></i> Збережено
-          </span>
+          </span>}
         </div>
       </div>
     </div>
@@ -130,10 +138,11 @@
       </div>
     </div>
 
-  </div>
+  </div>}
 
   <!-- ══ TAB: My works ════════════════════════════════════ -->
-  <div *ngIf="activeTab() === 'works'" class="uc-content">
+   @if (activeTab() === 'works') {
+  <div class="uc-content">
 
     <div class="uc-card">
       <div class="uc-card-head">
@@ -147,50 +156,57 @@
         <div class="uc-filter-row">
           <select [ngModel]="filterGenre()" (ngModelChange)="filterGenre.set($event)">
             <option value="">Всі жанри</option>
-            <option *ngFor="let g of genres" [value]="g">{{ g }}</option>
+            @for (item of workType.genres; track $index) {
+            <option [value]="item">{{ item }}</option>
+            }
           </select>
           <select [ngModel]="filterType()" (ngModelChange)="filterType.set($event)">
             <option value="">Всі типи</option>
-            <option *ngFor="let t of types" [value]="t">{{ t }}</option>
+            @for (item of workType.types; track $index) {
+            <option [value]="item">{{ item }}</option>
+            }
           </select>
         </div>
-
-        <ng-container *ngIf="myWorks().length > 0; else noWorks">
-          <div class="uc-work-card" *ngFor="let w of myWorks()">
+        
+        @if (myWorks().length > 0) {
+        <ng-container>
+          @for ( item of myWorks(); track $index) {
+          <div class="uc-work-card">
             <div class="uc-work-info">
-              <h3>{{ w.title }}</h3>
-              <p class="uc-work-date">Додано: {{ formatDate(w.createdAt) }}</p>
+              <h3>{{ item.title }}</h3>
+              <p class="uc-work-date">Додано: {{ formatDate(item.createdAt) }}</p>
               <div class="uc-work-pills">
-                <span class="uc-pill uc-pill-genre">{{ w.genre }}</span>
-                <span class="uc-pill uc-pill-type">{{ w.type }}</span>
-                <span class="uc-pill uc-pill-year" *ngIf="w.year">{{ w.year }}</span>
+                <span class="uc-pill uc-pill-genre">{{ item.genre }}</span>
+                <span class="uc-pill uc-pill-type">{{ item.type }}</span>
+                <span class="uc-pill uc-pill-year" *ngIf="item.year">{{ item.year }}</span>
               </div>
             </div>
             <div class="uc-work-actions">
-              <button class="uc-btn-outline" (click)="startEdit(w)" title="Редагувати">
+              <button class="uc-btn-outline" (click)="startEdit(item)" title="Редагувати">
                 <i class="ti ti-edit" aria-hidden="true"></i>
               </button>
-              <button class="uc-btn-danger" (click)="deleteWork(w.id!)" title="Видалити">
+              <button class="uc-btn-danger" (click)="deleteWork(item.id!)" title="Видалити">
                 <i class="ti ti-trash" aria-hidden="true"></i>
               </button>
             </div>
-          </div>
+          </div>}
         </ng-container>
-
-        <ng-template #noWorks>
+} @else {
+        <ng-template noWorks>
           <div class="uc-empty">
             <i class="ti ti-books" aria-hidden="true"></i>
             <p>Ви ще не додали жодного твору</p>
           </div>
         </ng-template>
-
+      }
       </div>
     </div>
 
   </div>
-
+}
   <!-- ══ TAB: Add / Edit work ═════════════════════════════ -->
-  <div *ngIf="activeTab() === 'add'" class="uc-content">
+   @if (activeTab() === 'add') {
+  <div class="uc-content">
 
     <div class="uc-card">
       <div class="uc-card-head">
@@ -223,14 +239,18 @@
             <label>Жанр</label>
             <select [ngModel]="workForm().genre"
                     (ngModelChange)="updateField('genre', $event)">
-              <option *ngFor="let g of genres" [value]="g">{{ g }}</option>
+                    @for (item of workType.genres; track $index) {
+              <option [value]="item">{{ item }}</option>
+              }
             </select>
           </div>
           <div class="uc-field">
             <label>Тип</label>
             <select [ngModel]="workForm().type"
                     (ngModelChange)="updateField('type', $event)">
-              <option *ngFor="let t of types" [value]="t">{{ t }}</option>
+                    @for (item of workType.types; track $index) {
+              <option [value]="item">{{ item }}</option>
+                    }
             </select>
           </div>
         </div>
@@ -246,10 +266,10 @@
         </div>
 
         <div class="uc-field uc-field-full">
-          <label>Опис ({{ descText().length }} / {{ DESC_MAX }})</label>
+          <label>Опис ({{ descText().length }} / {{ workType.desc_max }})</label>
           <textarea rows="3"
                     [ngModel]="descText()"
-                    (ngModelChange)="descText.set($event.slice(0, DESC_MAX))"
+                    (ngModelChange)="descText.set($event.slice(0, workType.desc_max))"
                     placeholder="Короткий опис твору..."></textarea>
         </div>
 
@@ -287,22 +307,26 @@
             {{ isSavingWork() ? 'Збереження...' : (editingId() ? 'Зберегти зміни' : 'Зберегти твір') }}
           </button>
           <button class="uc-btn-outline" (click)="cancelEdit()">Скасувати</button>
-          <span *ngIf="workSaved()" class="uc-saved-msg">
+          @if (workSaved()) {
+          <span class="uc-saved-msg">
             <i class="ti ti-check" aria-hidden="true"></i> Збережено
           </span>
+        }
         </div>
 
       </div>
     </div>
 
   </div>
+}
 
 </div>
-
+} @else {
 <!-- Not logged in -->
-<ng-template #noUser>
+<ng-template noUser>
   <div class="uc-no-user">
     <i class="ti ti-user-off" aria-hidden="true"></i>
     <p>Ви не увійшли до акаунту</p>
   </div>
 </ng-template>
+}

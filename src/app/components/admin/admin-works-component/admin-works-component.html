@@ -16,19 +16,23 @@
   </div>
 
   <!-- ── LIST ────────────────────────────────────── -->
-  <ng-container *ngIf="activeTab() === 'list'">
+   @if (activeTab() === 'list') {}
+  <ng-container>
     <div class="ac-filter-row">
       <select [ngModel]="filterGenre()" (ngModelChange)="filterGenre.set($event)">
         <option value="">Всі жанри</option>
-        <option *ngFor="let g of genres" [value]="g">{{ g }}</option>
-      </select>
+        @for (item of worksType.genres; track $index) {
+        <option [value]="item">{{ item }}</option>
+      }
+    </select>
       <select [ngModel]="filterType()" (ngModelChange)="filterType.set($event)">
         <option value="">Всі типи</option>
-        <option *ngFor="let t of types" [value]="t">{{ t }}</option>
+        @for (item of worksType.types; track $index) {
+        <option [value]="item">{{ item }}</option>}
       </select>
     </div>
-
-    <div class="ac-table-wrap" *ngIf="filteredWorks().length > 0; else noWorks">
+@if (filteredWorks().length > 0) {
+    <div class="ac-table-wrap">
       <table class="ac-table">
         <thead>
           <tr>
@@ -37,35 +41,38 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let w of filteredWorks()">
-            <td class="td-title">{{ w.title }}</td>
-            <td>{{ w.author }}</td>
-            <td><span class="ac-badge b-genre">{{ w.genre }}</span></td>
-            <td>{{ w.type }}</td>
-            <td>{{ w.year ?? '—' }}</td>
+          @for (item of filteredWorks(); track $index) {
+          <tr>
+            <td class="td-title">{{ item.title }}</td>
+            <td>{{ item.author }}</td>
+            <td><span class="ac-badge b-genre">{{ item.genre }}</span></td>
+            <td>{{ item.type }}</td>
+            <td>{{ item.year ?? '—' }}</td>
             <td class="td-actions">
-              <button class="ac-btn-edit" (click)="startEdit(w)" title="Редагувати">
+              <button class="ac-btn-edit" (click)="startEdit(item)" title="Редагувати">
                 <i class="ti ti-edit" aria-hidden="true"></i>
               </button>
-              <button class="ac-btn-del" (click)="deleteWork(w.id!)" title="Видалити">
+              <button class="ac-btn-del" (click)="deleteWork(item.id!)" title="Видалити">
                 <i class="ti ti-trash" aria-hidden="true"></i>
               </button>
             </td>
-          </tr>
+          </tr>}
         </tbody>
       </table>
     </div>
-
-    <ng-template #noWorks>
+  } @else {
+    <ng-template noWorks>
       <div class="ac-empty">
         <i class="ti ti-books" aria-hidden="true"></i>
         <p>Творів не знайдено</p>
       </div>
     </ng-template>
+  }
   </ng-container>
 
   <!-- ── ADD / EDIT FORM ─────────────────────────── -->
-  <ng-container *ngIf="activeTab() === 'add'">
+   @if (activeTab() === 'add') {
+  <ng-container>
     <div class="ac-form-card">
 
       <div class="ac-form-grid">
@@ -87,13 +94,16 @@
         <div class="ac-field">
           <label>Жанр</label>
           <select [ngModel]="form().genre" (ngModelChange)="setField('genre', $event)">
-            <option *ngFor="let g of genres" [value]="g">{{ g }}</option>
+            @for (item of worksType.genres; track $index) {
+            <option [value]="item">{{ item }}</option>
+          }
           </select>
         </div>
         <div class="ac-field">
           <label>Тип</label>
           <select [ngModel]="form().type" (ngModelChange)="setField('type', $event)">
-            <option *ngFor="let t of types" [value]="t">{{ t }}</option>
+            @for (item of worksType.types; track $index) {
+            <option [value]="item">{{ item }}</option>}
           </select>
         </div>
       </div>
@@ -109,10 +119,10 @@
       </div>
 
       <div class="ac-field">
-        <label>Опис ({{ descText().length }} / {{ DESC_MAX }})</label>
+        <label>Опис ({{ descText().length }} / {{ worksType.desc_max }})</label>
         <textarea rows="3"
                   [ngModel]="descText()"
-                  (ngModelChange)="descText.set($event.slice(0, DESC_MAX))"
+                  (ngModelChange)="descText.set($event.slice(0, worksType.desc_max))"
                   placeholder="Короткий опис твору..."></textarea>
       </div>
 
@@ -126,36 +136,37 @@
           <i class="ti ti-plus" aria-hidden="true"></i> Додати частину
         </button>
       </div>
-
-      <div class="ac-part-block" *ngFor="let p of form().parts; let i = index">
+@for (item of form().parts; ; track $index; let index = $index) {
+      <div class="ac-part-block">
         <div class="ac-part-top">
-          <input [value]="p.title"
-                 (input)="updatePart(i, 'title', $any($event.target).value)"
-                 placeholder="Назва частини {{ i + 1 }}">
+          <input [value]="item.title"
+                 (input)="updatePart(index, 'title', $any($event.target).value)"
+                 placeholder="Назва частини {{ index + 1 }}">
+                 @if ((form().parts?.length ?? 0) > 1) {
           <button class="ac-btn-del"
-                  (click)="removePart(i)"
-                  *ngIf="(form().parts?.length ?? 0) > 1"
+                  (click)="removePart(index)"
                   title="Видалити частину">
             <i class="ti ti-trash" aria-hidden="true"></i>
-          </button>
+          </button>}
         </div>
         <textarea rows="5"
-                  [value]="p.content"
-                  (input)="updatePart(i, 'content', $any($event.target).value)"
+                  [value]="item.content"
+                  (input)="updatePart(index, 'content', $any($event.target).value)"
                   placeholder="Текст частини..."></textarea>
       </div>
-
+    }
       <div class="ac-form-actions">
         <button class="ac-btn-primary" (click)="onSubmit()" [disabled]="isSaving()">
           <i class="ti ti-device-floppy" aria-hidden="true"></i>
           {{ isSaving() ? 'Збереження...' : (editingId() ? 'Зберегти зміни' : 'Зберегти твір') }}
         </button>
         <button class="ac-btn-outline" (click)="cancelEdit()">Скасувати</button>
-        <span *ngIf="saved()" class="ac-saved-msg">
+        @if (saved()) {
+        <span class="ac-saved-msg">
           <i class="ti ti-check" aria-hidden="true"></i> Збережено
-        </span>
+        </span>}
       </div>
 
     </div>
-  </ng-container>
+  </ng-container>}
 </div>

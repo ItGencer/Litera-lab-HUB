@@ -1,37 +1,23 @@
-import { Component, inject, signal, computed } from '@angular/core';
+import { Component, inject, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { AppUser, UsersServices } from '../../../services/users.services';
+import { UsersServices } from '../../../services/users.services';
+import { AppUser } from '../../../interface/user.interface';
+import { UserTableComponent } from '../user-table/user-table-component';
 
 @Component({
   selector: 'llh-admin-user-component',
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, UserTableComponent],
   templateUrl: './admin-user-component.html',
   styleUrl: './admin-user-component.scss',
 })
 export class AdminUserComponent {
-  usersSvc = inject(UsersServices);
+  public usersSvc = inject(UsersServices);
+  public roles: AppUser['role'][] = ['admin', 'moderator', 'user'];
 
-  roles: AppUser['role'][] = ['admin', 'moderator', 'user'];
+  // Статистика залишається тут
+  public totalCount  = computed(() => this.usersSvc.users().length);
+  public adminCount  = computed(() => this.usersSvc.users().filter(u => u.role === 'admin').length);
+  public bannedCount = computed(() => this.usersSvc.users().filter(u => u.banned).length);
 
-  // Статистика
-  totalCount = computed(() => this.usersSvc.users().length);
-  adminCount = computed(() => this.usersSvc.users().filter((u) => u.role === 'admin').length);
-  bannedCount = computed(() => this.usersSvc.users().filter((u) => u.banned).length);
-
-  roleBadgeClass(role: AppUser['role']): string {
-    return role === 'admin' ? 'b-admin' : role === 'moderator' ? 'b-mod' : 'b-user';
-  }
-
-  async onRoleChange(uid: string, event: Event): Promise<void> {
-    const role = (event.target as HTMLSelectElement).value as AppUser['role'];
-    if (!role) return; // ← додати цей рядок
-    {
-      await this.usersSvc.setRole(uid, role);
-    }
-  }
-
-  async toggleBan(u: AppUser): Promise<void> {
-    await this.usersSvc.setBanned(u.uid, !u.banned);
-  }
+  // roleBadgeClass, onRoleChange, toggleBan — ВИДАЛЕНО (перенесено в UserTableComponent)
 }

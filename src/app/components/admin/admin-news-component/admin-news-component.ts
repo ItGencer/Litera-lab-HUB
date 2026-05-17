@@ -1,7 +1,9 @@
 import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule }  from '@angular/forms';
-import { NewsItem, NewsService } from '../../../services/news.service';
+import { NewsService } from '../../../services/news.service';
+import { NewsItem } from '../../../interface/news.interface';
+import { Sign } from 'node:crypto';
 
 @Component({
   selector: 'llh-admin-news-component',
@@ -10,13 +12,12 @@ import { NewsItem, NewsService } from '../../../services/news.service';
   styleUrl: './admin-news-component.scss',
 })
 export class AdminNewsComponent {
-  newsSvc = inject(NewsService);
-
-  activeTab = signal<'list' | 'add'>('list');
-  editingId = signal<string | null>(null);
-  isSaving  = signal(false);
-  saved     = signal(false);
-  NEWS_MAX  = 3000;
+  public newsSvc:NewsService = inject(NewsService);
+  public activeTab           = signal<'list' | 'add'>('list');
+  public editingId           = signal<string | null>(null);
+  public isSaving            = signal(false);
+  public saved               = signal(false);
+  public newsMax: number     = 3000;
 
   emptyForm = () => ({ title: '', text: '', imageUrl: '' });
   form = signal(this.emptyForm());

@@ -6,16 +6,12 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { user } from '@angular/fire/auth';
 import { Database, ref, update, get } from '@angular/fire/database';
 import { UsersServices } from '../../services/users.services';
-import { WorksService, Work, WorkPart, GENRES, WORK_TYPES } from '../../services/works.service';
+import { WorksService, GENRES, WORK_TYPES } from '../../services/works.service';
+import { Work, WorkPart, WorkType } from '../../interface/work.interface';
+import { ProfileForm } from '../../interface/user.interface';
 
 export type UserTab = 'profile' | 'works' | 'add';
 
-interface ProfileForm {
-  displayName: string;
-  city: string;
-  birthYear: string;
-  about: string;
-}
 @Component({
   selector: 'llh-user-component',
   imports: [CommonModule, FormsModule],
@@ -25,16 +21,18 @@ interface ProfileForm {
 export class UserComponent implements OnInit {
   private auth = inject(Auth);
   private db = inject(Database);
-  usersSvc = inject(UsersServices);
-  worksSvc = inject(WorksService);
+  private worksSvc = inject(WorksService);
 
-  fireUser = toSignal(user(this.auth), { initialValue: null });
-  activeTab = signal<UserTab>('profile');
+  public usersSvc = inject(UsersServices);
+  public fireUser = toSignal(user(this.auth), { initialValue: null });
+  public activeTab = signal<UserTab>('profile');
 
-  genres = GENRES;
-  types = WORK_TYPES;
-  ABOUT_MAX = 300;
-  DESC_MAX = 2000;
+  public workType: WorkType ={
+    genres: GENRES,
+    types: WORK_TYPES,
+    about_max: 300,
+    desc_max: 2000,
+  }
 
   // ── Profile form ──────────────────────────────────────────
   profileForm = signal<ProfileForm>({

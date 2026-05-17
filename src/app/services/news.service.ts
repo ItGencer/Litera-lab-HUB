@@ -1,23 +1,15 @@
 import { inject, Injectable, signal } from '@angular/core';
 import { Database, ref, push, update, remove, onValue } from '@angular/fire/database';
 import { Auth } from '@angular/fire/auth';
-
-export interface NewsItem {
-  id?: string;
-  title: string;
-  text: string;
-  imageUrl?: string;
-  author: string;
-  createdAt: number;
-}
+import { NewsItem } from '../interface/news.interface';
 
 @Injectable({ providedIn: 'root' })
 export class NewsService {
   private db = inject(Database);
   private auth = inject(Auth);
-
-  news = signal<NewsItem[]>([]);
-  isLoading = signal(false);
+  private isLoading = signal(false);
+  
+  public news = signal<NewsItem[]>([]);
 
   loadAll(): void {
     this.isLoading.set(true);
@@ -27,7 +19,7 @@ export class NewsService {
         this.isLoading.set(false);
         return;
       }
-      // ✅ ВИПРАВЛЕННЯ: те саме
+      
       const list: NewsItem[] = [];
       snap.forEach((child) => {
         list.push({ id: child.key!, ...child.val() });
