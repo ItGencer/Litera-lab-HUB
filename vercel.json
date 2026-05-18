@@ -1,12 +1,13 @@
 {
   "version": 2,
   "buildCommand": "npm run build",
+  "outputDirectory": "public/browser",
   "rewrites": [
     { "source": "/(.*)", "destination": "/api/index" }
   ],
   "functions": {
     "api/index.mjs": {
-      "includeFiles": "public/server/**"
+      "includeFiles": "public/**"
     }
   }
 }
