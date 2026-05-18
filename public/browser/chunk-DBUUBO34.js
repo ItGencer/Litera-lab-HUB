@@ -1,1 +1,0 @@
-import{Ja as t,Za as o,_a as a,gb as s}from"./chunk-I7WWVTUH.js";var m=class n{static \u0275fac=function(e){return new(e||n)};static \u0275cmp=t({type:n,selectors:[["llh-years-component"]],decls:2,vars:0,template:function(e,r){e&1&&(o(0,"p"),s(1,"years-component works!"),a())},encapsulation:2})};export{m as YearsComponent};
