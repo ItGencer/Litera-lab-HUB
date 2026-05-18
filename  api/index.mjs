@@ -1,3 +1,6 @@
-// api/index.mjs
-const { reqHandler } = await import('../public/server/server.mjs');
-export default reqHandler;
+import { createServer } from 'node:http';
+
+export default async (req, res) => {
+  const { app } = await import('../public/server/server.mjs');
+  return app(req, res);
+};
