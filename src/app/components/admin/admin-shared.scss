@@ -1,0 +1,262 @@
+// ─────────────────────────────────────────────────────────────
+// admin-shared.scss  — спільні стилі для всіх вкладок адміна
+// ─────────────────────────────────────────────────────────────
+$beige:      #f5efe6;
+$beige-dark: #e8dcc8;
+$beige-mid:  #d4c4a8;
+$navy:       #1a2744;
+$navy-mid:   #243058;
+$gold:       #b8954a;
+$gold-light: #f0c96a;
+$brown:      #5c3d1e;
+$text-muted: #8b7355;
+$white:      #fffdf8;
+$border:     #c9b898;
+
+// Wrapper
+.ac-wrap { padding: 28px 28px 48px; }
+
+// Page title
+.ac-title {
+  font-family: Georgia, serif;
+  font-size: 20px; font-weight: 700; color: $brown;
+  margin-bottom: 22px; padding-bottom: 12px;
+  border-bottom: 2px solid $beige-mid;
+  display: flex; align-items: center; gap: 9px;
+  i { color: $gold; font-size: 20px; }
+}
+
+.ac-count-pill {
+  background: $navy;
+  color: $gold-light;
+  font-size: 11px; font-weight: 700;
+  padding: 2px 9px; border-radius: 20px;
+  font-family: Arial, sans-serif;
+  margin-left: 4px;
+}
+
+// Tabs
+.ac-tabs {
+  display: flex; gap: 0;
+  border-bottom: 2px solid $beige-mid;
+  margin-bottom: 22px;
+}
+
+.ac-tab {
+  padding: 9px 20px;
+  font-size: 13px; font-family: Arial, sans-serif;
+  color: $text-muted;
+  background: transparent; border: none;
+  border-bottom: 3px solid transparent;
+  margin-bottom: -2px; cursor: pointer;
+  transition: all 0.15s;
+
+  &:hover { color: $brown; }
+  &.active { color: $navy; border-bottom-color: $gold; font-weight: 600; }
+}
+
+// Stats (used in users tab)
+.ac-stats {
+  display: grid; grid-template-columns: repeat(3,1fr);
+  gap: 12px; margin-bottom: 24px;
+}
+.ac-stat {
+  background: $white; border: 1px solid $border;
+  border-radius: 9px; padding: 14px 18px;
+  display: flex; flex-direction: column; gap: 4px;
+}
+.ac-stat-val {
+  font-family: Georgia, serif; font-size: 26px;
+  font-weight: 700; color: $navy;
+}
+.ac-stat-lbl {
+  font-size: 11px; font-weight: 700; color: $text-muted;
+  text-transform: uppercase; letter-spacing: 0.05em;
+}
+
+// Table
+.ac-table-wrap {
+  background: $white; border: 1px solid $border;
+  border-radius: 10px; overflow: hidden;
+}
+.ac-table {
+  width: 100%; border-collapse: collapse; font-size: 13px;
+  th {
+    text-align: left; padding: 10px 14px;
+    background: $beige-dark; color: $text-muted;
+    font-size: 11px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.04em;
+    border-bottom: 2px solid $beige-mid;
+  }
+  td { padding: 10px 14px; border-bottom: 1px solid $beige-dark; vertical-align: middle; }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: rgba(184,149,74,0.04); }
+}
+.td-title { font-family: Georgia, serif; font-weight: 700; color: $brown; }
+.td-actions { white-space: nowrap; display: flex; gap: 6px; }
+
+// Filter row
+.ac-filter-row {
+  display: flex; gap: 8px; margin-bottom: 16px;
+  select {
+    padding: 7px 11px; border: 1px solid $border;
+    border-radius: 6px; font-size: 12px;
+    background: $white; color: $navy;
+    font-family: Arial, sans-serif; outline: none;
+    cursor: pointer;
+    &:focus { border-color: $gold; }
+  }
+}
+
+// Badges
+.ac-badge {
+  display: inline-block; padding: 3px 10px;
+  border-radius: 20px; font-size: 11px; font-weight: 600;
+}
+.b-admin { background: #e8f0fe; color: #1a3a8f;  border: 1px solid #b5caf4; }
+.b-mod   { background: #E1F5EE; color: #0F6E56;  border: 1px solid #9FE1CB; }
+.b-user  { background: $beige-dark; color: $text-muted; border: 1px solid $border; }
+.b-ban   { background: #FCEBEB; color: #A32D2D;  border: 1px solid #F09595; }
+.b-ok    { background: #EAF3DE; color: #3B6D11;  border: 1px solid #C0DD97; }
+.b-genre { background: rgba(184,149,74,.15); color: #633806; border: 1px solid rgba(184,149,74,.35); }
+
+// Form card
+.ac-form-card {
+  background: $white; border: 1px solid $border;
+  border-radius: 10px; padding: 22px;
+}
+.ac-form-grid {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 14px; margin-bottom: 14px;
+  &--1 { grid-template-columns: 1fr 3fr; }
+}
+.ac-field {
+  display: flex; flex-direction: column; gap: 5px;
+  label {
+    font-size: 11px; font-weight: 700; color: $text-muted;
+    text-transform: uppercase; letter-spacing: 0.05em;
+  }
+  input, select, textarea {
+    padding: 8px 12px; border: 1px solid $beige-mid;
+    border-radius: 7px; font-size: 13px;
+    background: $beige; color: $navy;
+    font-family: Arial, sans-serif; outline: none;
+    transition: border 0.15s;
+    &:focus { border-color: $gold; background: $white; }
+  }
+  textarea { resize: vertical; min-height: 80px; }
+}
+
+// Parts
+.ac-divider { height: 1px; background: $beige-mid; margin: 18px 0; }
+.ac-parts-head {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 12px;
+}
+.ac-parts-label {
+  font-size: 11px; font-weight: 700; color: $text-muted;
+  text-transform: uppercase; letter-spacing: 0.05em;
+  i { font-size: 13px; vertical-align: -2px; margin-right: 5px; }
+}
+.ac-part-block {
+  border: 1px solid $beige-mid; border-radius: 8px;
+  padding: 12px; background: $beige; margin-bottom: 10px;
+  textarea {
+    width: 100%; padding: 8px 11px; border: 1px solid $border;
+    border-radius: 6px; font-size: 13px; background: $white;
+    font-family: Arial, sans-serif; resize: vertical;
+    min-height: 100px; outline: none;
+    &:focus { border-color: $gold; }
+  }
+}
+.ac-part-top {
+  display: flex; gap: 8px; align-items: center; margin-bottom: 10px;
+  input {
+    flex: 1; padding: 7px 11px; border: 1px solid $border;
+    border-radius: 6px; font-size: 13px; background: $white;
+    font-family: Arial, sans-serif; outline: none;
+    &:focus { border-color: $gold; }
+  }
+}
+
+// News list item
+.ac-news-item {
+  display: flex; justify-content: space-between; align-items: flex-start;
+  padding: 13px 16px; border: 1px solid $beige-dark;
+  border-radius: 8px; background: $white; margin-bottom: 9px;
+  transition: border-color 0.15s;
+  &:hover { border-color: $gold; }
+  h3 { font-family: Georgia, serif; font-size: 14px; font-weight: 700; color: $brown; margin-bottom: 3px; }
+  p  { font-size: 12px; color: $text-muted; }
+}
+.ac-news-actions { display: flex; gap: 7px; flex-shrink: 0; padding-top: 2px; }
+
+// Buttons
+.ac-btn-primary {
+  padding: 9px 22px;
+  background: $navy; color: $gold-light;
+  border: 1px solid $gold; border-radius: 7px;
+  font-size: 13px; font-family: Arial, sans-serif; font-weight: 600;
+  cursor: pointer; display: inline-flex; align-items: center; gap: 6px;
+  transition: background 0.15s;
+  i { font-size: 15px; }
+  &:hover:not(:disabled) { background: $navy-mid; }
+  &:disabled { opacity: 0.6; cursor: not-allowed; }
+}
+.ac-btn-outline {
+  padding: 8px 18px; background: transparent;
+  color: $brown; border: 1px solid $border;
+  border-radius: 7px; font-size: 13px;
+  font-family: Arial, sans-serif; cursor: pointer;
+  &:hover { background: $beige-dark; }
+}
+.ac-btn-add-part {
+  padding: 6px 14px; background: transparent;
+  color: $navy; border: 1px solid $gold;
+  border-radius: 6px; font-size: 12px;
+  font-family: Arial, sans-serif; font-weight: 600; cursor: pointer;
+  display: inline-flex; align-items: center; gap: 4px;
+  &:hover { background: rgba(184,149,74,0.1); }
+}
+.ac-btn-edit {
+  padding: 5px 9px; background: transparent;
+  border: 1px solid $border; border-radius: 6px;
+  color: $brown; cursor: pointer; font-size: 14px;
+  &:hover { background: $beige-dark; }
+}
+.ac-btn-del {
+  padding: 5px 9px; background: transparent;
+  border: 1px solid #F09595; border-radius: 6px;
+  color: #A32D2D; cursor: pointer; font-size: 14px;
+  &:hover { background: #FCEBEB; }
+}
+.ac-select {
+  padding: 5px 8px; border: 1px solid $border;
+  border-radius: 6px; font-size: 12px;
+  background: $beige; color: $navy;
+  font-family: Arial, sans-serif; cursor: pointer; outline: none;
+  &:focus { border-color: $gold; }
+  &:disabled { opacity: 0.45; cursor: not-allowed; }
+}
+.ac-btn-ban {
+  padding: 5px 13px; background: transparent;
+  color: #A32D2D; border: 1px solid #F09595;
+  border-radius: 6px; font-size: 12px;
+  font-family: Arial, sans-serif; cursor: pointer;
+  &:hover { background: #FCEBEB; }
+  &.ac-btn-unban { color: #0F6E56; border-color: #9FE1CB; &:hover { background: #E1F5EE; } }
+}
+
+// Misc
+.ac-form-actions {
+  display: flex; align-items: center; gap: 10px; margin-top: 8px;
+}
+.ac-saved-msg {
+  font-size: 12px; color: #3B6D11; font-weight: 600;
+  display: inline-flex; align-items: center; gap: 4px;
+}
+.ac-empty {
+  text-align: center; padding: 44px; color: $text-muted;
+  i { font-size: 40px; display: block; margin-bottom: 12px; color: $beige-mid; }
+  p { font-size: 13px; }
+}

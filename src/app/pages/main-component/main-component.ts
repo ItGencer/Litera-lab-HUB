@@ -1,7 +1,7 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { NewsCartComponent } from '../../components/news-cart-component/news-cart-component';
 import { ArticlesService } from '../../services/articles.service';
-import { Article } from '../../interface/article.model';
+import { Article } from '../../interface/article.interface';
 
 @Component({
   selector: 'llh-main-component',
@@ -12,9 +12,9 @@ import { Article } from '../../interface/article.model';
 export class MainComponent implements OnInit {
   private articlesService = inject(ArticlesService);
 
-  articles = signal<Article[]>([]);
-  isLoading = signal(true);
-  error = signal<string | null>(null);
+  public isLoading = signal(true);
+  public error = signal<string | null>(null);
+  public articles = signal<Article[]>([]);
 
   ngOnInit(): void {
     this.articlesService.getNews().subscribe({  // ← getNews() замість getArticles()

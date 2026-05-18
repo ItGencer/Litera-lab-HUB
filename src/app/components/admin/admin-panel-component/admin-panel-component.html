@@ -1,0 +1,53 @@
+<div class="ap-layout">
+  <!-- ══ Sidebar ═══════════════════════════════════════════ -->
+  <aside class="ap-sidebar">
+    <div class="ap-logo">
+      <i class="ti ti-book-2" aria-hidden="true"></i>
+      Litera<span>Lab</span>
+    </div>
+
+    <nav class="ap-nav">
+      <p class="ap-nav-label">Адмін-панель</p>
+      @for (item of navMain; track item) {
+        <button
+          class="ap-nav-item"
+          [class.active]="activeTab() === item.id"
+          (click)="setTab(item.id)"
+        >
+          <i class="ti {{ item.icon }}" aria-hidden="true"></i>
+          {{ item.label }}
+        </button>
+      }
+    </nav>
+
+    <div class="ap-sidebar-footer">
+      <p class="ap-nav-label">Загальне</p>
+      @for (item of navBottom; track item.id) {
+        <button
+          class="ap-nav-item"
+          [class.active]="activeTab() === item.id"
+          (click)="setTab(item.id)"
+        >
+          <i class="ti {{ item.icon }}" aria-hidden="true"></i>
+          {{ item.label }}
+        </button>
+      }
+    </div>
+  </aside>
+
+  <!-- ══ Main content ═══════════════════════════════════════ -->
+  <main class="ap-main">
+    @if (activeTab() === 'users') {
+      <llh-admin-user-component />
+    }
+    @if (activeTab() === 'works') {
+      <llh-admin-works-component />
+    }
+    @if (activeTab() === 'news') {
+      <llh-admin-news-component />
+    }
+    @if (activeTab() === 'profile') {
+      <llh-user-component />
+    }
+  </main>
+</div>
