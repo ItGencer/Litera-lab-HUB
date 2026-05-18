@@ -1,4 +1,6 @@
 import { Routes } from '@angular/router';
+import { adminGuard } from './guards/admin.guard';
+import { authGuard } from './guards/auth.guard';
 
 export const routes: Routes = [
   {
@@ -30,7 +32,24 @@ export const routes: Routes = [
     path: 'news',
     loadComponent: () => import('./pages/news-component/news-component').then(m => m.NewsComponent),
     title: 'Новини'
-  },{
+  },
+ {
+  path: 'admin',
+  canActivate: [adminGuard],   // ← тільки admin, решта → 404
+  loadComponent: () =>
+    import('./components/admin/admin-panel-component/admin-panel-component')
+      .then(m => m.AdminPanelComponent),
+  title: 'Адмін-панель'
+},
+{
+  path: 'profile',
+  canActivate: [authGuard],    // ← будь-який залогінений
+  loadComponent: () =>
+    import('./components/user-component/user-component')
+      .then(m => m.UserComponent),
+  title: 'Мій профіль'
+},
+  {
   path: '**',
   loadComponent: () =>
     import('./pages/error-component/error-component').then(m => m.ErrorComponent),

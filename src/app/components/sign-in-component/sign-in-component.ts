@@ -15,8 +15,8 @@ export class SignInComponent {
   private authSvc  = inject(AuthService);
   private usersSvc = inject(UsersServices);
 
-  isLoading = signal(false);
-  errorMsg  = signal<string | null>(null);
+  public isLoading = signal(false);
+  public errorMsg  = signal<string | null>(null);
 
   async onGoogleSignIn(): Promise<void> {
     this.isLoading.set(true);

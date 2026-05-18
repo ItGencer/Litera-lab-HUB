@@ -1,7 +1,6 @@
 <header class="header">
   <div class="container">
     <div class="header__content">
-
       <div class="logo">
         <span class="logo__icon">📖</span>
         <span class="logo__text">Література</span>
@@ -30,8 +29,9 @@
           <div class="user-menu">
             <img
               class="user-menu__avatar"
-              [src]="fireUser()!.photoURL || 'assets/icons/avatar-default.svg'"
-              [alt]="fireUser()!.displayName || 'Користувач'"
+              [src]="fireUser()?.photoURL || 'assets/icons/avatar-default.svg'"
+              [alt]="fireUser()?.displayName || 'Користувач'"
+              (click)="onAvatarClick()"
             />
             <button class="btn-logout" (click)="onSignOut()">Вийти</button>
           </div>
@@ -39,7 +39,6 @@
           <button class="btn-login" (click)="openSignIn()">Увійти</button>
         }
       </nav>
-
     </div>
   </div>
 </header>

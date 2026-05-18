@@ -1,0 +1,107 @@
+// Власні токени компонента — незалежні від батька
+$beige:      #f5efe6;
+$beige-dark: #e8dcc8;
+$beige-mid:  #d4c4a8;
+$navy:       #1a2744;
+$gold:       #b8954a;
+$text-muted: #8b7355;
+$white:      #fffdf8;
+$border:     #c9b898;
+
+.ut-wrap {
+  background: $white;
+  border: 1px solid $border;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+// Table
+.ut-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+
+  th {
+    text-align: left;
+    padding: 10px 14px;
+    background: $beige-dark;
+    color: $text-muted;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    border-bottom: 2px solid $beige-mid;
+  }
+
+  td {
+    padding: 10px 14px;
+    border-bottom: 1px solid $beige-dark;
+    vertical-align: middle;
+  }
+
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: rgba(184, 149, 74, 0.04); }
+}
+
+.td-email { font-weight: 500; color: $navy; }
+
+// Badges
+.ut-badge {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.b-admin { background: #e8f0fe; color: #1a3a8f; border: 1px solid #b5caf4; }
+.b-mod   { background: #E1F5EE; color: #0F6E56; border: 1px solid #9FE1CB; }
+.b-user  { background: $beige-dark; color: $text-muted; border: 1px solid $border; }
+.b-ban   { background: #FCEBEB; color: #A32D2D; border: 1px solid #F09595; }
+.b-ok    { background: #EAF3DE; color: #3B6D11; border: 1px solid #C0DD97; }
+
+// Select
+.ut-select {
+  padding: 5px 8px;
+  border: 1px solid $border;
+  border-radius: 6px;
+  font-size: 12px;
+  background: $beige;
+  color: $navy;
+  cursor: pointer;
+  outline: none;
+
+  &:focus    { border-color: $gold; }
+  &:disabled { opacity: 0.45; cursor: not-allowed; }
+}
+
+// Ban button
+.ut-btn-ban {
+  padding: 5px 13px;
+  background: transparent;
+  color: #A32D2D;
+  border: 1px solid #F09595;
+  border-radius: 6px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: background 0.15s;
+
+  &:hover { background: #FCEBEB; }
+}
+
+.ut-btn-unban {
+  color: #0F6E56;
+  border-color: #9FE1CB;
+  &:hover { background: #E1F5EE; }
+}
+
+// Empty state
+.ut-empty {
+  text-align: center;
+  padding: 40px;
+  color: $text-muted;
+
+  i { font-size: 38px; display: block; margin-bottom: 10px; color: $beige-mid; }
+  p { font-size: 13px; }
+}

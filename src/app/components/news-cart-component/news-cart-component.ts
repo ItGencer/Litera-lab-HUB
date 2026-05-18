@@ -1,10 +1,9 @@
 import { Component, input } from '@angular/core';
-import { RouterLink } from '@angular/router';
-import { Article } from '../../interface/article.model';
+import { Article } from '../../interface/article.interface';
 
 @Component({
   selector: 'llh-news-cart-component',
-  imports: [RouterLink],
+  imports: [],
   templateUrl: './news-cart-component.html',
   styleUrl: './news-cart-component.scss',
 })

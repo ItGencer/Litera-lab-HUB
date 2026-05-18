@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { map, Observable } from 'rxjs';
-import { Article } from '../interface/article.model';
+import { Article } from '../interface/article.interface';
 import { DbReadService } from './db/db-read.service';
 
 @Injectable({ providedIn: 'root' })

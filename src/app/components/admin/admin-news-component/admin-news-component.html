@@ -1,0 +1,96 @@
+<div class="ac-wrap">
+  <div class="ac-title">
+    <i class="ti ti-news" aria-hidden="true"></i>
+    Новини
+    <span class="ac-count-pill">{{ newsSvc.news().length }}</span>
+  </div>
+
+  <div class="ac-tabs">
+    <button class="ac-tab" [class.active]="activeTab() === 'list'" (click)="cancelEdit()">
+      Список новин
+    </button>
+    <button class="ac-tab" [class.active]="activeTab() === 'add'" (click)="activeTab.set('add')">
+      {{ editingId() ? 'Редагування' : 'Додати новину' }}
+    </button>
+  </div>
+
+  <!-- LIST -->
+  @if (activeTab() === 'list') {
+    <ng-container>
+      @if (newsSvc.news().length > 0) {
+        <ng-container>
+          @for (item of newsSvc.news(); track $index) {
+            <div class="ac-news-item">
+              <div class="ac-news-body">
+                <h3>{{ item.title }}</h3>
+                <p>{{ formatDate(item.createdAt) }} · {{ item.author }}</p>
+              </div>
+              <div class="ac-news-actions">
+                <button class="ac-btn-edit" (click)="startEdit(item)" title="Редагувати">
+                  <i class="ti ti-edit" aria-hidden="true"></i>
+                </button>
+                <button class="ac-btn-del" (click)="deleteItem(item.id!)" title="Видалити">
+                  <i class="ti ti-trash" aria-hidden="true"></i>
+                </button>
+              </div>
+            </div>
+          }
+        </ng-container>
+      } @else {
+        <ng-template noNews>
+          <div class="ac-empty">
+            <i class="ti ti-news-off" aria-hidden="true"></i>
+            <p>Новин ще немає</p>
+          </div>
+        </ng-template>
+      }
+    </ng-container>
+  }
+  <!-- FORM -->
+  @if (activeTab() === 'add') {
+    <ng-container>
+      <div class="ac-form-card">
+        <div class="ac-field">
+          <label>Заголовок</label>
+          <input
+            [ngModel]="form().title"
+            (ngModelChange)="form.update((f) => ({ ...f, title: $event }))"
+            placeholder="Назва новини..."
+          />
+        </div>
+
+        <div class="ac-field">
+          <label>Зображення (URL, необов'язково)</label>
+          <input
+            [ngModel]="form().imageUrl"
+            (ngModelChange)="form.update((f) => ({ ...f, imageUrl: $event }))"
+            placeholder="https://..."
+          />
+        </div>
+
+        <div class="ac-field">
+          <label>Текст ({{ form().text.length }} / {{ newsMax }})</label>
+          <textarea
+            rows="6"
+            [ngModel]="form().text"
+            (ngModelChange)="form.update((f) => ({ ...f, text: $event.slice(0, newsMax) }))"
+            placeholder="Текст новини..."
+          ></textarea>
+        </div>
+
+        <div class="ac-form-actions">
+          <button class="ac-btn-primary" (click)="onSubmit()" [disabled]="isSaving()">
+            <i class="ti ti-send" aria-hidden="true"></i>
+            {{ isSaving() ? 'Збереження...' : editingId() ? 'Зберегти зміни' : 'Опублікувати' }}
+          </button>
+          <button class="ac-btn-outline" (click)="cancelEdit()">Скасувати</button>
+          @if (saved()) {
+            <span class="ac-saved-msg">
+              <i class="ti ti-check" aria-hidden="true"></i> Збережено
+            </span>
+          }
+        </div>
+      </div>
+    </ng-container>
+  }
+</div>

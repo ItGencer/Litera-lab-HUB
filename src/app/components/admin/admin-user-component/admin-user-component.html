@@ -1,0 +1,28 @@
+<div class="ac-wrap">
+  <div class="ac-title">
+    <i class="ti ti-users" aria-hidden="true"></i>
+    Користувачі
+  </div>
+
+  <!-- Stats -->
+  <div class="ac-stats">
+    <div class="ac-stat">
+      <span class="ac-stat-val">{{ totalCount() }}</span>
+      <span class="ac-stat-lbl">Всього</span>
+    </div>
+    <div class="ac-stat">
+      <span class="ac-stat-val">{{ adminCount() }}</span>
+      <span class="ac-stat-lbl">Адмінів</span>
+    </div>
+    <div class="ac-stat">
+      <span class="ac-stat-val">{{ bannedCount() }}</span>
+      <span class="ac-stat-lbl">Забанених</span>
+    </div>
+  </div>
+
+  <!-- Table — передаємо дані через signal inputs -->
+  <llh-user-table-component
+    [users]="usersSvc.users()"
+    [roles]="roles"
+  />
+</div>
