@@ -1,4 +1,3 @@
-// Власні токени компонента — незалежні від батька
 $beige:      #f5efe6;
 $beige-dark: #e8dcc8;
 $beige-mid:  #d4c4a8;
@@ -15,7 +14,6 @@ $border:     #c9b898;
   overflow: hidden;
 }
 
-// Table
 .ut-table {
   width: 100%;
   border-collapse: collapse;
@@ -40,12 +38,13 @@ $border:     #c9b898;
   }
 
   tr:last-child td { border-bottom: none; }
-  tr:hover td { background: rgba(184, 149, 74, 0.04); }
+  tr:hover td      { background: rgba(184, 149, 74, 0.04); }
+  tr.row-banned td { opacity: 0.5; }
 }
 
-.td-email { font-weight: 500; color: $navy; }
+.td-email   { font-weight: 500; color: $navy; }
+.td-actions { display: flex; gap: 6px; }
 
-// Badges
 .ut-badge {
   display: inline-block;
   padding: 3px 10px;
@@ -56,12 +55,9 @@ $border:     #c9b898;
 }
 
 .b-admin { background: #e8f0fe; color: #1a3a8f; border: 1px solid #b5caf4; }
-.b-mod   { background: #E1F5EE; color: #0F6E56; border: 1px solid #9FE1CB; }
+.b-mod   { background: #e1f5ee; color: #0f6e56; border: 1px solid #9fe1cb; }
 .b-user  { background: $beige-dark; color: $text-muted; border: 1px solid $border; }
-.b-ban   { background: #FCEBEB; color: #A32D2D; border: 1px solid #F09595; }
-.b-ok    { background: #EAF3DE; color: #3B6D11; border: 1px solid #C0DD97; }
 
-// Select
 .ut-select {
   padding: 5px 8px;
   border: 1px solid $border;
@@ -76,32 +72,39 @@ $border:     #c9b898;
   &:disabled { opacity: 0.45; cursor: not-allowed; }
 }
 
-// Ban button
-.ut-btn-ban {
+%btn-base {
   padding: 5px 13px;
-  background: transparent;
-  color: #A32D2D;
-  border: 1px solid #F09595;
   border-radius: 6px;
   font-size: 12px;
   cursor: pointer;
+  background: transparent;
   transition: background 0.15s;
-
-  &:hover { background: #FCEBEB; }
+  border: 1px solid;
 }
 
-.ut-btn-unban {
-  color: #0F6E56;
-  border-color: #9FE1CB;
-  &:hover { background: #E1F5EE; }
+.ut-btn-ban {
+  @extend %btn-base;
+  color: #a32d2d;
+  border-color: #f09595;
+  &:hover { background: #fcebeb; }
+
+  &.ut-btn-unban {
+    color: #0f6e56;
+    border-color: #9fe1cb;
+    &:hover { background: #e1f5ee; }
+  }
 }
 
-// Empty state
+.ut-btn-delete {
+  @extend %btn-base;
+  color: #5a1a1a;
+  border-color: #c0392b;
+  &:hover { background: #f9e0de; }
+}
+
 .ut-empty {
   text-align: center;
   padding: 40px;
   color: $text-muted;
-
-  i { font-size: 38px; display: block; margin-bottom: 10px; color: $beige-mid; }
-  p { font-size: 13px; }
+  font-size: 13px;
 }
