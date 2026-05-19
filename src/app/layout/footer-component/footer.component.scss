@@ -1,3 +1,4 @@
+@use 'sass:color';
 $footer-bg: #111e35; // Темно-синій як на фото
 $accent-gold: #d2b48c; // Колір кнопок та посилань
 $text-light: #e2e8f0;
@@ -102,7 +103,7 @@ $transition: all 0.3s ease;
       transition: $transition;
 
       &:hover {
-        background-color: lighten($accent-gold, 10%);
+background-color: color.adjust($accent-gold, $lightness: 10%);
       }
     }
   }

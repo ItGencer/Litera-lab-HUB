@@ -1,1 +1,72 @@
-@use '../admin-shared.scss' as *;
+@use '../admin-shared' as *;
+
+// ── Фільтр ────────────────────────────────────
+.ac-filter-row {
+  display: flex; gap: 8px; margin-bottom: 16px;
+  select {
+    padding: 7px 11px; border: 1px solid $border;
+    border-radius: 6px; font-size: 12px;
+    background: $white; color: $navy;
+    font-family: $font-family-Arial;
+    outline: none; cursor: pointer;
+    &:focus { border-color: $gold; }
+  }
+}
+
+// ── Таблиця ───────────────────────────────────
+.ac-table-wrap { @include card; overflow: hidden; }
+
+.ac-table {
+  width: 100%; border-collapse: collapse; font-size: 13px;
+  th {
+    text-align: left; padding: 10px 14px;
+    background: $beige-dark; color: $text-muted;
+    font-size: 11px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.04em;
+    border-bottom: 2px solid $beige-mid;
+  }
+  td { padding: 10px 14px; border-bottom: 1px solid $beige-dark; vertical-align: middle; }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: rgba(184,149,74,0.04); }
+}
+
+.td-title   { 
+    font-family: $font-family-Arial;
+    font-weight: 700; color: $brown; }
+.td-actions { white-space: nowrap; display: flex; gap: 6px; }
+
+// ── Частини твору ─────────────────────────────
+.ac-parts-head {
+  display: flex; justify-content: space-between;
+  align-items: center; margin-bottom: 12px;
+}
+
+.ac-parts-label {
+  font-size: 11px; font-weight: 700; color: $text-muted;
+  text-transform: uppercase; letter-spacing: 0.05em;
+  i { font-size: 13px; vertical-align: -2px; margin-right: 5px; }
+}
+
+.ac-part-block {
+  border: 1px solid $beige-mid; border-radius: 8px;
+  padding: 12px; background: $beige; margin-bottom: 10px;
+  textarea {
+    width: 100%; padding: 8px 11px; border: 1px solid $border;
+    border-radius: 6px; font-size: 13px; background: $white;
+    font-family: $font-family-Arial;
+    resize: vertical;
+    min-height: 100px; outline: none;
+    &:focus { border-color: $gold; }
+  }
+}
+
+.ac-part-top {
+  display: flex; gap: 8px; align-items: center; margin-bottom: 10px;
+  input {
+    flex: 1; padding: 7px 11px; border: 1px solid $border;
+    border-radius: 6px; font-size: 13px; background: $white;
+    font-family: $font-family-Arial;
+    outline: none;
+    &:focus { border-color: $gold; }
+  }
+}

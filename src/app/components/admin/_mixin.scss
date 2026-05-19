@@ -1,0 +1,43 @@
+@use 'variables' as *; // ← ось це бракувало
+
+@mixin input-base {
+  padding: 8px 12px;
+  border: 1px solid $beige-mid;
+  border-radius: 7px;
+  font-size: 13px;
+  background: $beige;
+  color: $navy;
+  font-family: $font-family-Arial;
+  outline: none;
+  transition: border 0.15s;
+  &:focus { border-color: $gold; background: $white; }
+}
+
+// Базова кнопка — padding задається при виклику
+@mixin btn-base($pad-y: 8px, $pad-x: 18px) {
+  padding: $pad-y $pad-x;
+  border-radius: 7px;
+  font-size: 13px;
+  font-family: $font-family-Arial;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: background 0.15s;
+}
+
+// Маленька іконка-кнопка (edit / del)
+@mixin icon-btn {
+  padding: 5px 9px;
+  background: transparent;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+// Картка — білий блок з рамкою
+@mixin card {
+  background: $white;
+  border: 1px solid $border;
+  border-radius: 10px;
+}
