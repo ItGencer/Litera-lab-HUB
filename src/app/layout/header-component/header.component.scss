@@ -1,3 +1,4 @@
+@use 'sass:color';
 $primary-dark: #1e293b;
 $bg-color: #d2b48c; // Колір з вашого скриншоту
 $transition: all 0.3s ease;
@@ -8,7 +9,7 @@ $transition: all 0.3s ease;
   position: sticky;
   top: 0;
   z-index: 1000;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 
   .container {
     max-width: 4800px; // Підтримка 8K
@@ -35,10 +36,9 @@ $transition: all 0.3s ease;
     height: 40px;
   }
 
-  span{
-    
-  font-size: 2rem;
-  color: $primary-dark;
+  span {
+    font-size: 2rem;
+    color: $primary-dark;
   }
 }
 
@@ -80,7 +80,7 @@ $transition: all 0.3s ease;
   font-size: 16px;
 
   &:hover {
-    background-color: lighten($primary-dark, 10%);
+    background-color: color.adjust($primary-dark, $lightness: 10%);
   }
 }
 
@@ -107,11 +107,17 @@ $transition: all 0.3s ease;
   .burger {
     display: flex;
     z-index: 1001;
-    
+
     &.active {
-      span:nth-child(1) { transform: translateY(8px) rotate(45deg); }
-      span:nth-child(2) { opacity: 0; }
-      span:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
+      span:nth-child(1) {
+        transform: translateY(8px) rotate(45deg);
+      }
+      span:nth-child(2) {
+        opacity: 0;
+      }
+      span:nth-child(3) {
+        transform: translateY(-8px) rotate(-45deg);
+      }
     }
   }
 
@@ -140,41 +146,48 @@ $transition: all 0.3s ease;
 
 // Для дуже великих екранів (4K/8K)
 @media (min-width: 2560px) {
-  .nav__link { font-size: 24px; }
-  .logo { font-size: 36px; }
-  .btn-login { padding: 12px 40px; font-size: 22px; }
+  .nav__link {
+    font-size: 24px;
+  }
+  .logo {
+    font-size: 36px;
+  }
+  .btn-login {
+    padding: 12px 40px;
+    font-size: 22px;
+  }
 }
 
 // Дописати в кінець header.component.scss
 
 .user-menu {
-  display:     flex;
+  display: flex;
   align-items: center;
-  gap:         10px;
+  gap: 10px;
 
   &__avatar {
-    width:         36px;
-    height:        36px;
+    width: 36px;
+    height: 36px;
     border-radius: 50%;
-    object-fit:    cover;
-    border:        2px solid $primary-dark;
+    object-fit: cover;
+    border: 2px solid $primary-dark;
     cursor: pointer;
   }
 }
 
 .btn-logout {
-  background:    transparent;
-  color:         $primary-dark;
-  border:        2px solid $primary-dark;
-  padding:       6px 16px;
+  background: transparent;
+  color: $primary-dark;
+  border: 2px solid $primary-dark;
+  padding: 6px 16px;
   border-radius: 8px;
-  font-weight:   600;
-  cursor:        pointer;
-  font-size:     14px;
-  transition:    $transition;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 14px;
+  transition: $transition;
 
   &:hover {
     background: $primary-dark;
-    color:      white;
+    color: white;
   }
 }

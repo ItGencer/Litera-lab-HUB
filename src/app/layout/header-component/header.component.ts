@@ -1,34 +1,36 @@
-import { Component, effect, inject, signal } from '@angular/core';
-import { Router }          from '@angular/router';
-import { toSignal }        from '@angular/core/rxjs-interop';
-import { Auth, user }      from '@angular/fire/auth';
-import { SignInComponent }  from '../../components/sign-in-component/sign-in-component';
-import { AuthService }     from '../../services/auth.service';
-import { UsersServices }   from '../../services/users.services';
+import { Component, effect, inject, PLATFORM_ID, signal } from '@angular/core';
+import { Router, RouterLink } from '@angular/router';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { Auth, user } from '@angular/fire/auth';
+import { SignInComponent } from '../../components/sign-in-component/sign-in-component';
+import { AuthService } from '../../services/auth.service';
+import { UsersServices } from '../../services/users.services';
+import { isPlatformBrowser } from '@angular/common';
 
 @Component({
   selector: 'llh-header-component',
-  imports: [SignInComponent],
+  imports: [SignInComponent, RouterLink],
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss',
 })
 export class HeaderComponent {
-  private authSvc  = inject(AuthService);
-  private auth     = inject(Auth);
-  private router   = inject(Router);       // ← для навігації
-  public  usersSvc = inject(UsersServices);
+  private authSvc = inject(AuthService);
+  private auth = inject(Auth);
+  private router = inject(Router); // ← для навігації
+  private platformId = inject(PLATFORM_ID);
 
-  public fireUser     = toSignal(user(this.auth), { initialValue: null });
-  public isMenuOpen   = signal(false);
+  public usersSvc = inject(UsersServices);
+  public fireUser = toSignal(user(this.auth));
+  public isMenuOpen = signal(false);
   public isSignInOpen = signal(false);
 
   public navItems = [
-    { label: 'Головна',         link: '/' },
-    { label: 'Жанри',           link: '/genres',   hasDropdown: true },
+    { label: 'Головна', link: '/' },
+    { label: 'Жанри', link: '/genres', hasDropdown: true },
     { label: 'Роки публікації', link: '/years' },
-    { label: 'Автори',          link: '/authors' },
-    { label: 'По алфавіту',     link: '/alphabet' },
-    { label: 'Новини',          link: '/news' },
+    { label: 'Автори', link: '/authors' },
+    { label: 'По алфавіту', link: '/alphabet' },
+    { label: 'Новини', link: '/news' },
   ];
 
   constructor() {
@@ -43,9 +45,19 @@ export class HeaderComponent {
     });
   }
 
-  toggleMenu():  void { this.isMenuOpen.update(v => !v); }
-  openSignIn():  void { this.isSignInOpen.set(true); }
-  closeSignIn(): void { this.isSignInOpen.set(false); }
+  get isBrowser(): boolean {
+    return isPlatformBrowser(this.platformId);
+  }
+
+  toggleMenu(): void {
+    this.isMenuOpen.update((v) => !v);
+  }
+  openSignIn(): void {
+    this.isSignInOpen.set(true);
+  }
+  closeSignIn(): void {
+    this.isSignInOpen.set(false);
+  }
 
   async onSignOut(): Promise<void> {
     await this.authSvc.signOut();

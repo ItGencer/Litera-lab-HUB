@@ -14,7 +14,7 @@
         <ul class="nav__list">
           @for (item of navItems; track item.label) {
             <li class="nav__item">
-              <a [href]="item.link" class="nav__link">
+              <a [routerLink]="item.link" class="nav__link">
                 {{ item.label }}
                 @if (item.hasDropdown) {
                   <span class="nav__arrow">⌄</span>
@@ -25,14 +25,16 @@
         </ul>
 
         <!-- Залогінений юзер -->
+         
         @if (fireUser()) {
           <div class="user-menu">
-            <img
-              class="user-menu__avatar"
-              [src]="fireUser()?.photoURL || 'assets/icons/avatar-default.svg'"
-              [alt]="fireUser()?.displayName || 'Користувач'"
-              (click)="onAvatarClick()"
-            />
+            @if (isBrowser && fireUser()) {
+              <img
+                class="user-menu__avatar"
+                [src]="fireUser()?.photoURL || 'assets/icons/avatar-default.svg'"
+                (click)="onAvatarClick()"
+              />
+            }
             <button class="btn-logout" (click)="onSignOut()">Вийти</button>
           </div>
         } @else {

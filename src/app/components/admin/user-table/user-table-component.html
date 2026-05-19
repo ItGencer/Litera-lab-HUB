@@ -1,19 +1,19 @@
 <div class="ut-wrap">
   @if (users().length > 0) {
-
     <table class="ut-table">
       <thead>
         <tr>
+          <th>Ім'я</th>
           <th>Email</th>
           <th>Роль</th>
-          <th>Статус</th>
           <th>Змінити роль</th>
-          <th>Дія</th>
+          <th>Дії</th>
         </tr>
       </thead>
       <tbody>
         @for (user of users(); track user.uid) {
-          <tr>
+          <tr [class.row-banned]="user.banned">
+            <td>{{ user.displayName || '—' }}</td>
             <td class="td-email">{{ user.email }}</td>
 
             <td>
@@ -23,25 +23,21 @@
             </td>
 
             <td>
-              <span class="ut-badge" [class]="user.banned ? 'b-ban' : 'b-ok'">
-                {{ user.banned ? 'заблокований' : 'активний' }}
-              </span>
-            </td>
-
-            <td>
               <select
                 class="ut-select"
-                [value]="user.role"
                 [disabled]="user.banned"
                 (change)="onRoleChange(user.uid, $event)"
               >
                 @for (role of roles(); track $index) {
-                  <option [value]="role">{{ role }}</option>
+                  <!-- [selected] — єдиний правильний спосіб у @for без ngModel -->
+                  <option [value]="role" [selected]="role === user.role">
+                    {{ role }}
+                  </option>
                 }
               </select>
             </td>
 
-            <td>
+            <td class="td-actions">
               <button
                 class="ut-btn-ban"
                 [class.ut-btn-unban]="user.banned"
@@ -49,18 +45,18 @@
               >
                 {{ user.banned ? 'Розбанити' : 'Бан' }}
               </button>
+
+              <button class="ut-btn-delete" (click)="onDelete(user.uid)">
+                Видалити
+              </button>
             </td>
           </tr>
         }
       </tbody>
     </table>
-
   } @else {
-
     <div class="ut-empty">
-      <i class="ti ti-users-off" aria-hidden="true"></i>
       <p>Користувачів не знайдено</p>
     </div>
-
   }
 </div>
