@@ -88,4 +88,18 @@ export class UsersServices {
 
     this.users.update((list) => list.map((u) => (u.uid === uid ? { ...u, banned } : u)));
   }
+
+  async deleteUser(uid: string): Promise<void> {
+    // Викликаємо наш Vercel API
+    const res = await fetch('/api/delete-user', {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ uid }),
+    });
+
+    if (!res.ok) throw new Error('Помилка видалення');
+
+    // Оновлюємо локальний список
+    this.users.update((list) => list.filter((u) => u.uid !== uid));
+  }
 }
