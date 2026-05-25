@@ -35,8 +35,8 @@ export class HeaderComponent {
 
   constructor() {
     effect(() => {
-      const u = this.fireUser();
-      if (u) {
+      const user = this.fireUser();
+      if (user) {
         this.usersSvc.loadCurrentUser(); // завантажує роль з DB
       } else {
         this.usersSvc.currentUser.set(null);
