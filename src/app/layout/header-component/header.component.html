@@ -14,7 +14,7 @@
         <ul class="nav__list">
           @for (item of navItems; track item.label) {
             <li class="nav__item">
-              <a [routerLink]="item.link" class="nav__link">
+              <a [routerLink]="item.link" class="nav__link" (click)="isMenuOpen.set(false)">
                 {{ item.label }}
                 @if (item.hasDropdown) {
                   <span class="nav__arrow">⌄</span>
@@ -27,7 +27,7 @@
         <!-- Залогінений юзер -->
          
         @if (fireUser()) {
-          <div class="user-menu">
+          <div class="user-menu" (click)="isMenuOpen.set(false)">
             @if (isBrowser && fireUser()) {
               <img
                 class="user-menu__avatar"

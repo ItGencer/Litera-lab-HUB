@@ -39,37 +39,40 @@ export class UsersServices {
     this.userRole.set(appUser.role);
   }
 
-  // ── Створити запис юзера при першому вході (Google Sign-In) ─────────────────
-  async ensureUser(uid: string, email: string): Promise<void> {
+  async ensureUser(uid: string, email: string, displayName?: string | null): Promise<void> {
     const snap = await get(ref(this.db, `Users/${uid}`));
+    if (snap.exists()) return; // uid вже є — виходимо
 
-    // Якщо запис вже є — нічого не робимо
-    if (snap.exists()) return;
-
-    // Створюємо мінімальний запис
     await set(ref(this.db, `Users/${uid}`), {
       email,
+      displayName: displayName ?? null,
       role: 'user',
       banned: false,
       profile: {},
     });
   }
 
-  // ── Завантажити всіх юзерів (тільки для адміна) ──────────────────────────────
   async loadAllUsers(): Promise<void> {
     const snap = await get(ref(this.db, 'Users'));
-    if (!snap.exists()) return;
+    if (!snap.exists()) {
+      this.users.set([]);
+      return;
+    }
 
     const raw = snap.val() as Record<string, any>;
-    const list: AppUser[] = Object.entries(raw).map(([uid, data]) => ({
-      uid,
-      displayName: data.profile?.displayName ?? data.displayName ?? null,
-      email: data.email ?? null,
-      photoURL: data.photoURL ?? null,
-      role: data.role ?? 'user',
-      banned: data.banned ?? false,
-      profile: data.profile ?? {},
-    }));
+
+    // Map автоматично дає унікальні uid
+    const list: AppUser[] = Object.entries(raw)
+      .filter(([, data]) => data && data.email) // виключаємо порожні записи
+      .map(([uid, data]) => ({
+        uid,
+        displayName: data.profile?.displayName ?? data.displayName ?? null,
+        email: data.email ?? null,
+        photoURL: data.photoURL ?? null,
+        role: data.role ?? 'user',
+        banned: data.banned ?? false,
+        profile: data.profile ?? {},
+      }));
 
     this.users.set(list);
   }
@@ -88,18 +91,29 @@ export class UsersServices {
 
     this.users.update((list) => list.map((u) => (u.uid === uid ? { ...u, banned } : u)));
   }
-
+  
   async deleteUser(uid: string): Promise<void> {
-    // Викликаємо наш Vercel API
+  try {
     const res = await fetch('/api/delete-user', {
       method: 'DELETE',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ uid }),
     });
 
-    if (!res.ok) throw new Error('Помилка видалення');
+    if (!res.ok) {
+      const err = await res.json();
+      // Показуємо помилку — НЕ кидаємо exception
+      console.error('[deleteUser] Server error:', err.error);
+      alert(`Помилка видалення: ${err.error}`);
+      return; // ← виходимо без перезавантаження
+    }
 
-    // Оновлюємо локальний список
+    // Оновлюємо локально
     this.users.update((list) => list.filter((u) => u.uid !== uid));
+
+  } catch (err) {
+    console.error('[deleteUser] Network error:', err);
+    alert('Мережева помилка. Перевір консоль сервера.');
   }
+}
 }
