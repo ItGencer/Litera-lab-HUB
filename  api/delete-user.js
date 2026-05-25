@@ -1,6 +1,5 @@
 const admin = require('firebase-admin');
 
-// Ініціалізуємо один раз
 if (!admin.apps.length) {
   admin.initializeApp({
     credential: admin.credential.cert({
@@ -13,6 +12,7 @@ if (!admin.apps.length) {
 }
 
 module.exports = async (req, res) => {
+  // Дозволяємо тільки DELETE
   if (req.method !== 'DELETE') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
@@ -21,14 +21,15 @@ module.exports = async (req, res) => {
   if (!uid) return res.status(400).json({ error: 'uid required' });
 
   try {
-    // Видаляємо з Firebase Authentication
+    // 1. Видаляємо з Firebase Authentication
     await admin.auth().deleteUser(uid);
 
-    // Видаляємо з Realtime Database
-    await admin.database().ref(`users/${uid}`).remove();
+    // 2. Видаляємо з Realtime Database (ВЕЛИКА U — як у сервісі!)
+    await admin.database().ref(`Users/${uid}`).remove();
 
-    res.status(200).json({ success: true });
+    return res.status(200).json({ success: true });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    console.error('Delete user error:', err);
+    return res.status(500).json({ error: err.message });
   }
 };
