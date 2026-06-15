@@ -3,6 +3,7 @@
   "buildCommand": "npm run build",
   "outputDirectory": "public/browser",
   "rewrites": [
+    { "source": "/api/delete-user", "destination": "/api/delete-user" },
     { "source": "/(.*)", "destination": "/api/index" }
   ]
 }

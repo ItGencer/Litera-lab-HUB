@@ -95,20 +95,18 @@ export class UsersServices {
   async deleteUser(uid: string): Promise<void> {
   try {
     const res = await fetch('/api/delete-user', {
-      method: 'DELETE',
+      method: 'POST',  // ← змінено з DELETE на POST
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ uid }),
     });
 
     if (!res.ok) {
       const err = await res.json();
-      // Показуємо помилку — НЕ кидаємо exception
       console.error('[deleteUser] Server error:', err.error);
       alert(`Помилка видалення: ${err.error}`);
-      return; // ← виходимо без перезавантаження
+      return;
     }
 
-    // Оновлюємо локально
     this.users.update((list) => list.filter((u) => u.uid !== uid));
 
   } catch (err) {
