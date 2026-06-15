@@ -101,9 +101,16 @@ export class UsersServices {
     });
 
     if (!res.ok) {
-      const err = await res.json();
-      console.error('[deleteUser] Server error:', err.error);
-      alert(`Помилка видалення: ${err.error}`);
+      // Безпечний парсинг — Vercel може повернути HTML замість JSON
+      let errorMsg = `HTTP ${res.status}`;
+      try {
+        const err = await res.json();
+        errorMsg = err.error ?? errorMsg;
+      } catch {
+        errorMsg = await res.text().catch(() => errorMsg);
+      }
+      console.error('[deleteUser] Server error:', errorMsg);
+      alert(`Помилка видалення: ${errorMsg}`);
       return;
     }
 
