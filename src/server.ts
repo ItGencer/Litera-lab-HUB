@@ -25,8 +25,8 @@ app.use(
   }),
 );
 
-// ── 3. API роути — ПЕРЕД Angular SSR ──────────────────────────────────
-app.delete('/api/delete-user', deleteUserHandler);
+// ── 3. API роути — ПЕРЕД Angular SSR ──────────────────
+app.post('/api/delete-user', deleteUserHandler);  // ← post замість delete
 
 // ── 4. Angular SSR — ОСТАННІЙ, ловить все інше ────────────────────────
 app.use((req, res, next) => {

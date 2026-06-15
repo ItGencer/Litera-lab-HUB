@@ -15,7 +15,8 @@ function getAdminApp(): admin.app.App {
 }
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
-  if (req.method !== 'DELETE') {
+  // Дозволяємо POST замість DELETE (DELETE може не мати body на деяких серверах)
+  if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
