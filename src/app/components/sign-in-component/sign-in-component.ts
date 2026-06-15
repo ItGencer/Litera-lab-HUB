@@ -13,8 +13,7 @@ export class SignInComponent {
   close = output<void>();
 
   private authSvc  = inject(AuthService);
-  private usersSvc = inject(UsersServices);
-
+  
   public isLoading = signal(false);
   public errorMsg  = signal<string | null>(null);
 

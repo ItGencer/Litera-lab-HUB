@@ -38,7 +38,8 @@ function getAdminApp(): admin.app.App {
 }
 
 export async function deleteUserHandler(req: Request, res: Response): Promise<void> {
-  if (req.method !== 'DELETE') {
+  if (req.method !== 'POST') {
+    // ← POST замість DELETE
     res.status(405).json({ error: 'Method not allowed' });
     return;
   }
