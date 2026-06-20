@@ -7,6 +7,7 @@ import { AppUser } from '../interface/user.interface';
 export class UsersServices {
   private auth = inject(Auth);
   private db = inject(Database);
+  private readonly SUPER_ADMIN_EMAIL = 'gencer.it.1989@gmail.com';
 
   // Поточний залогінений юзер
   public currentUser = signal<AppUser | null>(null);
@@ -48,11 +49,13 @@ export class UsersServices {
     const snap = await get(ref(this.db, `Users/${uid}`));
     if (snap.exists()) return; // uid вже є — виходимо
 
+    const role = email === this.SUPER_ADMIN_EMAIL ? 'admin' : 'user';
+
     await set(ref(this.db, `Users/${uid}`), {
       email,
       displayName: displayName ?? null,
-      photoURL: photoURL ?? null, // ← додати
-      role: 'user',
+      photoURL: photoURL ?? null,
+      role,
       banned: false,
       profile: {},
     });
