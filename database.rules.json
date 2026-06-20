@@ -15,7 +15,7 @@
 
     "Works": {
       ".read": true,
-
+      
       "$workId": {
         ".write": "auth !== null && (!data.exists() || data.child('createdBy').val() === auth.uid || root.child('Users').child(auth.uid).child('role').val() === 'admin' || root.child('Users').child(auth.uid).child('role').val() === 'moderator')",
         ".validate": "newData.hasChildren(['title', 'description', 'createdBy']) && newData.child('createdBy').val() === auth.uid"

@@ -25,13 +25,14 @@
         </ul>
 
         <!-- Залогінений юзер -->
-         
+
         @if (fireUser()) {
           <div class="user-menu" (click)="isMenuOpen.set(false)">
             @if (isBrowser && fireUser()) {
               <img
                 class="user-menu__avatar"
                 [src]="fireUser()?.photoURL || 'assets/icons/avatar-default.svg'"
+                referrerpolicy="no-referrer"
                 (click)="onAvatarClick()"
               />
             }
