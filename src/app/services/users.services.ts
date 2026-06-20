@@ -40,20 +40,26 @@ export class UsersServices {
     this.userRole.set(appUser.role);
   }
 
-async ensureUser(uid: string, email: string, displayName?: string | null): Promise<void> {
-  const snap = await get(ref(this.db, `Users/${uid}`));
-  if (snap.exists()) return; // uid вже є — виходимо
+  async ensureUser(
+    uid: string,
+    email: string,
+    displayName?: string | null,
+    photoURL?: string | null,
+  ): Promise<void> {
+    const snap = await get(ref(this.db, `Users/${uid}`));
+    if (snap.exists()) return; // uid вже є — виходимо
 
-  const role = email === this.SUPER_ADMIN_EMAIL ? 'admin' : 'user';
+    const role = email === this.SUPER_ADMIN_EMAIL ? 'admin' : 'user';
 
-  await set(ref(this.db, `Users/${uid}`), {
-    email,
-    displayName: displayName ?? null,
-    role,
-    banned: false,
-    profile: {},
-  });
-}
+    await set(ref(this.db, `Users/${uid}`), {
+      email,
+      displayName: displayName ?? null,
+      photoURL: photoURL ?? null,
+      role,
+      banned: false,
+      profile: {},
+    });
+  }
 
   async loadAllUsers(): Promise<void> {
     const snap = await get(ref(this.db, 'Users'));
@@ -94,34 +100,33 @@ async ensureUser(uid: string, email: string, displayName?: string | null): Promi
 
     this.users.update((list) => list.map((u) => (u.uid === uid ? { ...u, banned } : u)));
   }
-  
+
   async deleteUser(uid: string): Promise<void> {
-  try {
-    const res = await fetch('/api/delete-user', {
-      method: 'POST',  // ← змінено з DELETE на POST
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ uid }),
-    });
+    try {
+      const res = await fetch('/api/delete-user', {
+        method: 'POST', // ← змінено з DELETE на POST
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ uid }),
+      });
 
-    if (!res.ok) {
-      // Безпечний парсинг — Vercel може повернути HTML замість JSON
-      let errorMsg = `HTTP ${res.status}`;
-      try {
-        const err = await res.json();
-        errorMsg = err.error ?? errorMsg;
-      } catch {
-        errorMsg = await res.text().catch(() => errorMsg);
+      if (!res.ok) {
+        // Безпечний парсинг — Vercel може повернути HTML замість JSON
+        let errorMsg = `HTTP ${res.status}`;
+        try {
+          const err = await res.json();
+          errorMsg = err.error ?? errorMsg;
+        } catch {
+          errorMsg = await res.text().catch(() => errorMsg);
+        }
+        console.error('[deleteUser] Server error:', errorMsg);
+        alert(`Помилка видалення: ${errorMsg}`);
+        return;
       }
-      console.error('[deleteUser] Server error:', errorMsg);
-      alert(`Помилка видалення: ${errorMsg}`);
-      return;
+
+      this.users.update((list) => list.filter((u) => u.uid !== uid));
+    } catch (err) {
+      console.error('[deleteUser] Network error:', err);
+      alert('Мережева помилка. Перевір консоль сервера.');
     }
-
-    this.users.update((list) => list.filter((u) => u.uid !== uid));
-
-  } catch (err) {
-    console.error('[deleteUser] Network error:', err);
-    alert('Мережева помилка. Перевір консоль сервера.');
   }
-}
 }
