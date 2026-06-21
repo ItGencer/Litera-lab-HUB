@@ -47,7 +47,7 @@
             <td>{{ item.author }}</td>
             <td><span class="ac-badge b-genre">{{ item.genre }}</span></td>
             <td>{{ item.type }}</td>
-            <td>{{ item.year ?? '—' }}</td>
+            <td>{{ item.year ? extractYear(item.year) : '—' }}</td>
             <td class="td-actions">
               <button class="ac-btn-edit" (click)="startEdit(item)" title="Редагувати">
                 <i class="ti ti-edit" aria-hidden="true"></i>
@@ -77,16 +77,24 @@
 
       <div class="ac-form-grid">
         <div class="ac-field">
-          <label>Назва твору</label>
+          <label>Назва твору *</label>
           <input [ngModel]="form().title"
                  (ngModelChange)="setField('title', $event)"
+                 [class.ac-input-error]="errors()['title']"
                  placeholder="Введіть назву...">
+          @if (errors()['title']) {
+            <span class="ac-error-msg">{{ errors()['title'] }}</span>
+          }
         </div>
         <div class="ac-field">
-          <label>Автор</label>
+          <label>Автор *</label>
           <input [ngModel]="form().author"
                  (ngModelChange)="setField('author', $event)"
+                 [class.ac-input-error]="errors()['author']"
                  placeholder="Ім'я автора">
+          @if (errors()['author']) {
+            <span class="ac-error-msg">{{ errors()['author'] }}</span>
+          }
         </div>
       </div>
 
@@ -101,20 +109,25 @@
         </div>
         <div class="ac-field">
           <label>Тип</label>
-          <select [ngModel]="form().type" (ngModelChange)="setField('type', $event)">
+          <select [ngModel]="form().type" (ngModelChange)="onTypeChange($event)">
             @for (item of worksType.types; track $index) {
-            <option [value]="item">{{ item }}</option>}
+            <option [value]="item">{{ item }}</option>
+          }
           </select>
         </div>
       </div>
 
       <div class="ac-form-grid ac-form-grid--1">
         <div class="ac-field">
-          <label>Рік написання</label>
-          <input type="number"
+          <label>Рік написання *</label>
+          <input type="date"
                  [ngModel]="form().year"
-                 (ngModelChange)="setField('year', +$event)"
-                 placeholder="напр. 1840">
+                 (ngModelChange)="setField('year', $event)"
+                 [max]="maxDate"
+                 [class.ac-input-error]="errors()['year']">
+          @if (errors()['year']) {
+            <span class="ac-error-msg">{{ errors()['year'] }}</span>
+          }
         </div>
       </div>
 
@@ -128,33 +141,59 @@
 
       <div class="ac-divider"></div>
 
-      <div class="ac-parts-head">
-        <span class="ac-parts-label">
-          <i class="ti ti-list" aria-hidden="true"></i> Частини твору
-        </span>
-        <button class="ac-btn-add-part" (click)="addPart()">
-          <i class="ti ti-plus" aria-hidden="true"></i> Додати частину
-        </button>
-      </div>
-@for (item of form().parts; ; track $index; let index = $index) {
-      <div class="ac-part-block">
-        <div class="ac-part-top">
-          <input [value]="item.title"
-                 (input)="updatePart(index, 'title', $any($event.target).value)"
-                 placeholder="Назва частини {{ index + 1 }}">
-                 @if ((form().parts?.length ?? 0) > 1) {
-          <button class="ac-btn-del"
-                  (click)="removePart(index)"
-                  title="Видалити частину">
-            <i class="ti ti-trash" aria-hidden="true"></i>
-          </button>}
+      @if (form().hasParts) {
+        <div class="ac-parts-head">
+          <span class="ac-parts-label">
+            <i class="ti ti-list" aria-hidden="true"></i> Частини твору
+          </span>
+          <button class="ac-btn-add-part" (click)="addPart()">
+            <i class="ti ti-plus" aria-hidden="true"></i> Додати частину
+          </button>
         </div>
-        <textarea rows="5"
-                  [value]="item.content"
-                  (input)="updatePart(index, 'content', $any($event.target).value)"
-                  placeholder="Текст частини..."></textarea>
-      </div>
-    }
+        @for (item of form().parts; ; track $index; let index = $index) {
+        <div class="ac-part-block">
+          <div class="ac-part-top">
+            <input [value]="item.title"
+                   (input)="updatePart(index, 'title', $any($event.target).value)"
+                   [class.ac-input-error]="errors()['part_'+index+'_title']"
+                   placeholder="Назва частини {{ index + 1 }}">
+                   @if ((form().parts?.length ?? 0) > 1) {
+            <button class="ac-btn-del"
+                    (click)="removePart(index)"
+                    title="Видалити частину">
+              <i class="ti ti-trash" aria-hidden="true"></i>
+            </button>}
+          </div>
+          @if (errors()['part_'+index+'_title']) {
+            <span class="ac-error-msg">{{ errors()['part_'+index+'_title'] }}</span>
+          }
+          <textarea rows="5"
+                    [value]="item.content"
+                    (input)="updatePart(index, 'content', $any($event.target).value)"
+                    [class.ac-input-error]="errors()['part_'+index+'_content']"
+                    placeholder="Текст частини..."></textarea>
+          @if (errors()['part_'+index+'_content']) {
+            <span class="ac-error-msg">{{ errors()['part_'+index+'_content'] }}</span>
+          }
+        </div>
+      }
+      } @else {
+        <div class="ac-parts-head">
+          <span class="ac-parts-label">
+            <i class="ti ti-list" aria-hidden="true"></i> Текст твору
+          </span>
+        </div>
+        <div class="ac-field">
+          <textarea rows="10"
+                    [value]="form().parts?.[0]?.content ?? ''"
+                    (input)="updatePart(0, 'content', $any($event.target).value)"
+                    [class.ac-input-error]="errors()['content']"
+                    placeholder="Текст твору..."></textarea>
+          @if (errors()['content']) {
+            <span class="ac-error-msg">{{ errors()['content'] }}</span>
+          }
+        </div>
+      }
       <div class="ac-form-actions">
         <button class="ac-btn-primary" (click)="onSubmit()" [disabled]="isSaving()">
           <i class="ti ti-device-floppy" aria-hidden="true"></i>

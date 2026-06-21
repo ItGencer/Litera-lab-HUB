@@ -9,8 +9,9 @@ export interface Work {
   author: string;
   genre: string;
   type: string;
-  year: number | null;
+  year: string | null; // дата 'yyyy-MM-dd' (раніше — просто число-рік)
   description: string[];
+  hasParts: boolean; // визначається автоматично за полем `type`, див. works.service.ts
   parts: WorkPart[];
   createdAt: number;
   createdBy: string;
