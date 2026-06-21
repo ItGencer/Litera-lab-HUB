@@ -279,3 +279,15 @@
   align-items: center;
   gap: 4px;
 }
+
+// ── Validation ──────────────────────────────────
+.ac-error-msg {
+  font-size: 11px;
+  color: #a32d2d;
+  margin-top: 2px;
+}
+input.ac-input-error,
+select.ac-input-error,
+textarea.ac-input-error {
+  border-color: #a32d2d !important;
+}
