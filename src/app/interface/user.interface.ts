@@ -1,7 +1,7 @@
 export interface UserProfile {
   displayName?: string;
   city?: string;
-  birthYear?: string;
+  birthDate?: string; // дата 'yyyy-MM-dd' (раніше birthYear: рядок-рік)
   about?: string;
 }
 
@@ -18,6 +18,6 @@ export interface AppUser {
 export interface ProfileForm {
   displayName: string;
   city: string;
-  birthYear: string;
+  birthDate: string;
   about: string;
 }

@@ -18,6 +18,17 @@ export const WORK_TYPES = [
   'Байка',
 ];
 
+/** Невеликі ліричні форми — зберігаються одним суцільним текстом, без поділу на частини */
+export const WORK_TYPES_NO_PARTS = ['Вірш', 'Поема', 'Елегія', 'Ода', 'Байка'];
+
+/** Великі епічні/драматичні форми — поділяються на частини (розділи, дії тощо) */
+export const WORK_TYPES_WITH_PARTS = ['Роман', 'Повість', 'Оповідання', "П'єса", 'Трагедія', 'Комедія'];
+
+/** Чи потребує обраний тип твору поділу на частини. Перемикається автоматично при зміні "Тип". */
+export function hasPartsForType(type: string): boolean {
+  return WORK_TYPES_WITH_PARTS.includes(type);
+}
+
 @Injectable({ providedIn: 'root' })
 export class WorksService {
   private db = inject(Database);
