@@ -36,6 +36,7 @@ export class HeaderComponent {
   constructor() {
     effect(() => {
       const user = this.fireUser();
+
       if (user) {
         this.usersSvc.loadCurrentUser(); // завантажує роль з DB
       } else {
@@ -67,8 +68,7 @@ export class HeaderComponent {
   // Клік на аватар → перевіряємо роль → роутинг
   onAvatarClick(): void {
     const role = this.usersSvc.userRole();
-
-    if (role === 'admin') {
+    if (role === 'admin' || role === 'moderator') {
       this.router.navigate(['/admin']);
     } else {
       this.router.navigate(['/profile']);
